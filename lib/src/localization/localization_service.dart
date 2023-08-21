@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:pusher_channels_test_app/src/localization/tk_intl.dart';
 
 /// An abstract singleton class that holds [delegates] and returns [AppLocalizations] from [translation] method.
 abstract class LocalizationService {
@@ -12,6 +13,8 @@ abstract class LocalizationService {
     GlobalWidgetsLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
+    TkMaterialLocalizations.delegate,
+    CupertinoLocalizationTk.delegate
   ];
 
   static const supportedLocales = [
@@ -20,7 +23,7 @@ abstract class LocalizationService {
     enLocale,
   ];
 
-  static const Locale fallbackLocale = Locale(ruLocaleCode);
+  static const Locale fallbackLocale = Locale(enLocaleCode);
 
   static const tkLocaleCode = 'tk';
 

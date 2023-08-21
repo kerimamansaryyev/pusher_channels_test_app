@@ -1,4 +1,7 @@
 {
   "enterChatRoom": "Enter chat room",
-  "settings": "Settings"
+  "settings": "Settings",
+  "navigateBack": "Back",
+  "language": "Language",
+  "theme": "Theme"
 }

@@ -44,7 +44,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SectionButton(
                     iconData: CupertinoIcons.settings,
-                    onPressed: () {},
+                    onPressed: () => _homeNavigator.navigateToSettings(
+                      context,
+                      previousPageTitle: (context) =>
+                          context.translation.navigateBack,
+                    ),
                     title: context.translation.settings,
                   ),
                 ],

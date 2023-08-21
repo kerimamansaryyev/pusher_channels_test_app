@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:pusher_channels_test_app/src/core/ui/section_button.dart';
+import 'package:pusher_channels_test_app/src/core/utils/theme/app_theme.dart';
 import 'package:pusher_channels_test_app/src/features/home/presentation/home_navigator.dart';
+import 'package:pusher_channels_test_app/src/localization/extensions.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,10 +24,37 @@ class _HomePageState extends State<HomePage> {
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      child: Center(
-        child: Text(
-          'data',
-        ),
+      backgroundColor: CupertinoColors.systemGroupedBackground,
+      child: Builder(
+        builder: (context) {
+          return ListView(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppTheme.horizontalBodyPadding(context),
+            ).copyWith(
+              top: AppTheme.navBarPadding(context),
+            ),
+            children: [
+              CupertinoFormSection.insetGrouped(
+                margin: EdgeInsets.zero,
+                children: [
+                  SectionButton(
+                    iconData: CupertinoIcons.chat_bubble,
+                    onPressed: () {},
+                    title: context.translation.enterChatRoom,
+                  ),
+                  SectionButton(
+                    iconData: CupertinoIcons.settings,
+                    onPressed: () {},
+                    title: context.translation.settings,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: AppTheme.sectionsDividingSpace,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

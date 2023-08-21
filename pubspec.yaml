@@ -22,6 +22,7 @@ dependencies:
   injectable: 2.1.1
   injectable_generator: 2.1.5
   intl: 0.18.0
+  shared_preferences: 2.1.1
 
 
 

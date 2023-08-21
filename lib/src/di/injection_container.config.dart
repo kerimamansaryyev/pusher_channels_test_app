@@ -12,6 +12,7 @@
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
+import '../features/home/presentation/home_navigator.dart' as _i4;
 import '../navigation/app_navigator.dart' as _i3;
 
 // ignore_for_file: unnecessary_lambdas
@@ -28,5 +29,7 @@ _i1.GetIt $initGetIt(
     environmentFilter,
   );
   gh.factory<_i3.AppNavigator>(() => _i3.AppNavigator());
+  gh.factory<_i4.HomeNavigator>(
+      () => _i4.HomeNavigator(appNavigator: gh<_i3.AppNavigator>()));
   return getIt;
 }

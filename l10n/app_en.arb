@@ -3,5 +3,6 @@
   "settings": "Settings",
   "navigateBack": "Back",
   "language": "Language",
-  "theme": "Theme"
+  "theme": "Theme",
+  "chatRoom": "Chat room"
 }

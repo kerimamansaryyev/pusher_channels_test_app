@@ -12,6 +12,7 @@ environment:
 dependencies:
   adaptix: 0.1.0
   cupertino_icons: 1.0.2
+  dart_pusher_channels: 1.1.1
   flutter:
     sdk: flutter
   flutter_bloc: 8.1.3

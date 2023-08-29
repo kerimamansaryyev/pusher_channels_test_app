@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   SectionButton(
                     iconData: CupertinoIcons.chat_bubble,
-                    onPressed: () {},
+                    onPressed: () => _homeNavigator.navigateToChatPage(context),
                     title: context.translation.enterChatRoom,
                   ),
                   SectionButton(

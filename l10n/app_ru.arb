@@ -3,5 +3,6 @@
   "settings": "Настройки",
   "navigateBack": "Назад",
   "language": "Язык",
-  "theme": "Тема"
+  "theme": "Тема",
+  "chatRoom": "Чат комната"
 }

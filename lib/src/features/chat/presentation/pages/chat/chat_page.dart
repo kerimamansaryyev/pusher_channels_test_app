@@ -47,7 +47,9 @@ class _ChatPageState extends State<ChatPage> {
             ),
           PusherChannelsConnectionFailed(exception: final exception) => Center(
               child: Text(
-                '',
+                context.translation.errorOccurred(
+                  exception.runtimeType.toString(),
+                ),
               ),
             ),
         },

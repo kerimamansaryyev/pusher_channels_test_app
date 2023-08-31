@@ -1,4 +1,12 @@
 {
+  "errorOccurred": "Произошла ошибка: {errorType}",
+  "@errorOccurred": {
+    "placeholders": {
+      "errorType": {
+        "type": "String"
+      }
+    }
+  },
   "enterChatRoom": "Зайти в чат комнату",
   "settings": "Настройки",
   "navigateBack": "Назад",

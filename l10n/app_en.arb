@@ -1,4 +1,12 @@
 {
+  "errorOccurred": "Error occurred: {errorType}",
+  "@errorOccurred": {
+    "placeholders": {
+      "errorType": {
+        "type": "String"
+      }
+    }
+  },
   "enterChatRoom": "Enter chat room",
   "settings": "Settings",
   "navigateBack": "Back",

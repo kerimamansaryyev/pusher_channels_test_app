@@ -1,4 +1,12 @@
 {
+  "errorOccurred": "Ýalňyş ýüze çykdy: {errorType}",
+  "@errorOccurred": {
+    "placeholders": {
+      "errorType": {
+        "type": "String"
+      }
+    }
+  },
   "enterChatRoom": "Çat otaga gir",
   "settings": "Sazlamalar",
   "navigateBack": "Yza",

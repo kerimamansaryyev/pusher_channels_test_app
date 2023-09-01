@@ -45,5 +45,6 @@
   "navigateBack": "Назад",
   "language": "Язык",
   "theme": "Тема",
-  "chatRoom": "Чат комната"
+  "chatRoom": "Чат комната",
+  "triggerClientEvent": "Отправить сообщение"
 }

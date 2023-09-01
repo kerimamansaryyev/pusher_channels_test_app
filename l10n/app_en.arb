@@ -46,5 +46,6 @@
   "navigateBack": "Back",
   "language": "Language",
   "theme": "Theme",
-  "chatRoom": "Chat room"
+  "chatRoom": "Chat room",
+  "triggerClientEvent": "Trigger client event"
 }

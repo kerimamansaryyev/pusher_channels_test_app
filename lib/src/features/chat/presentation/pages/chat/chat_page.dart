@@ -78,39 +78,69 @@ class _ChatPageState extends State<ChatPage> {
                 builder: (context, chatListState) =>
                     switch (connectionState.connectionResult) {
                   PusherChannelsConnectionSucceeded() => chatListState.when(
-                      succeeded: (messages) => CustomScrollView(
-                        slivers: [
-                          SliverPadding(
-                            padding: EdgeInsets.only(
-                              top: AppTheme.navBarPadding(context),
-                            ),
-                            sliver: SliverList.builder(
-                              itemBuilder: (context, index) {
-                                final eventEntity = messages[index];
-
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                  ).copyWith(
-                                    bottom: AppTheme.sectionsDividingSpace,
+                      succeeded: (messages) => Column(
+                        children: [
+                          Expanded(
+                            child: CustomScrollView(
+                              slivers: [
+                                SliverPadding(
+                                  padding: EdgeInsets.only(
+                                    top: AppTheme.navBarPadding(context),
                                   ),
-                                  child: switch (eventEntity) {
-                                    PusherChannelsChatBeganEventEntity() ||
-                                    PusherChannelsUserJoinedEventEntity() ||
-                                    PusherChannelsUserLeftEventEntity() =>
-                                      _EventNotification(
-                                        eventEntity: eventEntity,
-                                      ),
-                                    PusherChannelsUserMessageEventEntity() =>
-                                      _MessageBubble(
-                                        eventEntity: eventEntity,
-                                      ),
-                                  },
-                                );
-                              },
-                              itemCount: messages.length,
+                                  sliver: SliverList.builder(
+                                    itemBuilder: (context, index) {
+                                      final eventEntity = messages[index];
+
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                        ).copyWith(
+                                          bottom:
+                                              AppTheme.sectionsDividingSpace,
+                                        ),
+                                        child: switch (eventEntity) {
+                                          PusherChannelsChatBeganEventEntity() ||
+                                          PusherChannelsUserJoinedEventEntity() ||
+                                          PusherChannelsUserLeftEventEntity() =>
+                                            _EventNotification(
+                                              eventEntity: eventEntity,
+                                            ),
+                                          PusherChannelsUserMessageEventEntity() =>
+                                            _MessageBubble(
+                                              eventEntity: eventEntity,
+                                            ),
+                                        },
+                                      );
+                                    },
+                                    itemCount: messages.length,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ),
+                                  child: CupertinoButton.filled(
+                                    onPressed: () {},
+                                    child: Text(
+                                      context.translation.triggerClientEvent,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppTheme.bottomPadding(context),
+                          )
                         ],
                       ),
                       waitingForSubscription: () => loader,

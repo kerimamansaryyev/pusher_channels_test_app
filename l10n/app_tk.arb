@@ -45,5 +45,6 @@
   "navigateBack": "Yza",
   "language": "Dili",
   "theme": "Garaňky keşbi",
-  "chatRoom": "Çat otagy"
+  "chatRoom": "Çat otagy",
+  "triggerClientEvent": "Habar ugratmak"
 }

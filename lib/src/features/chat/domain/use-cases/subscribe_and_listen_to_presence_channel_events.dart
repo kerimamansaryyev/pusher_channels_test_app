@@ -3,10 +3,10 @@ import 'package:pusher_channels_test_app/src/features/pusher_channels_connection
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/repositories/pusher_channels_connection_repository.dart';
 
 @injectable
-class SubscribeAndListenToChannelEvents {
+class SubscribeAndListenToPresenceChannelEvents {
   final PusherChannelsConnectionRepository _pusherChannelsConnectionRepository;
 
-  SubscribeAndListenToChannelEvents(
+  SubscribeAndListenToPresenceChannelEvents(
     this._pusherChannelsConnectionRepository,
   );
 

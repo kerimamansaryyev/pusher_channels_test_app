@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pusher_channels_test_app/src/di/injection_container.dart';
@@ -33,6 +32,7 @@ final class PusherChannelsConnectionCubit
   void connect() {
     _connectionStreamSubs?.cancel();
     _connectionStreamSubs = null;
+
     _connectionStreamSubs = _listenForPusherChannelsClientConnection().listen(
       _onConnectionEvent,
     );
@@ -41,6 +41,7 @@ final class PusherChannelsConnectionCubit
 
   @override
   Future<void> close() {
+    _connectionStreamSubs?.cancel();
     _resetPusherChannelsClient();
     return super.close();
   }

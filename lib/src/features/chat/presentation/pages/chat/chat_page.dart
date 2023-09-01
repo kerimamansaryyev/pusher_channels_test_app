@@ -1,3 +1,4 @@
+import 'package:adaptix/adaptix.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pusher_channels_test_app/src/core/utils/theme/app_theme.dart';
@@ -26,6 +27,16 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
   }
 
+  void _onConnectionChanged(PusherChannelsConnectionState connectionState) {
+    if (connectionState.connectionResult
+        case PusherChannelsConnectionSucceeded()) {
+      _chatListCubit.startListening();
+    } else if (connectionState.connectionResult
+        case PusherChannelsConnectionPending()) {
+      _chatListCubit.resetToWaitingForSubscription();
+    }
+  }
+
   @override
   void dispose() {
     _pusherChannelsConnectionCubit.close();
@@ -35,6 +46,10 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    const loader = Center(
+      child: CupertinoActivityIndicator(),
+    );
+
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text(
@@ -49,12 +64,9 @@ class _ChatPageState extends State<ChatPage> {
               BlocListener<PusherChannelsConnectionCubit,
                   PusherChannelsConnectionState>(
                 bloc: _pusherChannelsConnectionCubit,
-                listener: (context, state) {
-                  if (state.connectionResult
-                      case PusherChannelsConnectionSucceeded()) {
-                    _chatListCubit.startListening();
-                  }
-                },
+                listener: (context, state) => _onConnectionChanged(
+                  state,
+                ),
               ),
             ],
             child: BlocBuilder<PusherChannelsConnectionCubit,
@@ -65,41 +77,69 @@ class _ChatPageState extends State<ChatPage> {
                 bloc: _chatListCubit,
                 builder: (context, chatListState) =>
                     switch (connectionState.connectionResult) {
-                  PusherChannelsConnectionSucceeded() => CustomScrollView(
-                      reverse: true,
-                      slivers: [
-                        SliverPadding(
-                          padding: EdgeInsets.only(
-                            top: AppTheme.navBarPadding(context),
-                          ),
-                          sliver: SliverList.builder(
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: AppTheme.sectionsDividingSpace,
-                              ),
-                              child: switch (chatListState.messages[index]) {
-                                PusherChannelsChatBeganEventModel() ||
-                                PusherChannelsUserJoinedEventModel() ||
-                                PusherChannelsUserLeftEventModel() =>
-                                  _EventNotification(
-                                    eventEntity: chatListState.messages[index],
-                                  ),
-                              },
+                  PusherChannelsConnectionSucceeded() => chatListState.when(
+                      succeeded: (messages) => CustomScrollView(
+                        slivers: [
+                          SliverPadding(
+                            padding: EdgeInsets.only(
+                              top: AppTheme.navBarPadding(context),
                             ),
-                            itemCount: chatListState.messages.length,
+                            sliver: SliverList.builder(
+                              itemBuilder: (context, index) {
+                                final eventEntity = messages[index];
+
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ).copyWith(
+                                    bottom: AppTheme.sectionsDividingSpace,
+                                  ),
+                                  child: switch (eventEntity) {
+                                    PusherChannelsChatBeganEventModel() ||
+                                    PusherChannelsUserJoinedEventModel() ||
+                                    PusherChannelsUserLeftEventModel() =>
+                                      _EventNotification(
+                                        eventEntity: eventEntity,
+                                      ),
+                                    PusherChannelsUserMessageEventModel() =>
+                                      _MessageBubble(
+                                        eventEntity: eventEntity,
+                                      ),
+                                  },
+                                );
+                              },
+                              itemCount: messages.length,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                      waitingForSubscription: () => loader,
                     ),
-                  PusherChannelsConnectionPending() => const Center(
-                      child: CupertinoActivityIndicator(),
-                    ),
+                  PusherChannelsConnectionPending() => loader,
                   PusherChannelsConnectionFailed(exception: final exception) =>
                     Center(
-                      child: Text(
-                        context.translation.errorOccurred(
-                          exception.runtimeType.toString(),
-                        ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            context.translation.errorOccurred(
+                              exception.runtimeType.toString(),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Center(
+                            child: CupertinoButton(
+                              onPressed: () =>
+                                  _pusherChannelsConnectionCubit.connect(),
+                              child: Icon(
+                                CupertinoIcons.refresh,
+                                size: 36.adaptedPx(context),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                 },
@@ -112,13 +152,87 @@ class _ChatPageState extends State<ChatPage> {
   }
 }
 
+class _MessageBubble extends StatelessWidget {
+  final PusherChannelsUserMessageEventModel eventEntity;
+
+  const _MessageBubble({
+    required this.eventEntity,
+    Key? key,
+  }) : super(
+          key: key,
+        );
+
+  @override
+  Widget build(BuildContext context) {
+    final userId = eventEntity.userId;
+
+    const paddingOfUserLabel = 7.0;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Flexible(
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: CupertinoColors.activeGreen,
+                    borderRadius: BorderRadius.circular(
+                      8,
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(
+                    12,
+                  ),
+                  child: Text(
+                    eventEntity.messageContent,
+                    style: AppTypographies.b2.style(context).copyWith(
+                          color: CupertinoColors.label.darkColor,
+                        ),
+                  ),
+                ),
+                if (userId != null) ...[
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      right: eventEntity.isMyMessage ? paddingOfUserLabel : 0,
+                      left: eventEntity.isMyMessage ? 0 : paddingOfUserLabel,
+                    ),
+                    child: Text(
+                      context.translation.messageOfUser(userId),
+                      style: AppTypographies.b4.style(context).copyWith(
+                            color: CupertinoDynamicColor.resolve(
+                              CupertinoColors.secondaryLabel,
+                              context,
+                            ),
+                          ),
+                    ),
+                  ),
+                ]
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _EventNotification extends StatelessWidget {
   final PusherChannelsEventEntity eventEntity;
 
   const _EventNotification({
     required this.eventEntity,
-    super.key,
-  });
+    Key? key,
+  }) : super(
+          key: key,
+        );
 
   @override
   Widget build(BuildContext context) {

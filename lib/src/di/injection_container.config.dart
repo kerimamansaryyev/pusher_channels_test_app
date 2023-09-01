@@ -14,6 +14,8 @@ import 'package:injectable/injectable.dart' as _i2;
 import 'package:shared_preferences/shared_preferences.dart' as _i9;
 
 import '../core/di/injection_module.dart' as _i21;
+import '../features/chat/domain/use-cases/subscribe_and_listen_to_presence_channel_events.dart'
+    as _i10;
 import '../features/chat/presentation/blocs/chat_list_cubit.dart' as _i11;
 import '../features/home/presentation/home_navigator.dart' as _i4;
 import '../features/pusher_channels_connection/data/repositories/pusher_channels_connection_repository_impl.dart'
@@ -26,8 +28,6 @@ import '../features/pusher_channels_connection/domain/use-cases/listen_for_pushe
     as _i13;
 import '../features/pusher_channels_connection/domain/use-cases/reset_pusher_channels_client.dart'
     as _i7;
-import '../features/pusher_channels_connection/domain/use-cases/subscribe_and_listen_to_channel_events.dart'
-    as _i10;
 import '../features/pusher_channels_connection/presentation/blocs/pusher_channels_connection_cubit.dart'
     as _i14;
 import '../features/settings/data/repositories/settings_repository_impl.dart'
@@ -69,11 +69,11 @@ Future<_i1.GetIt> $initGetIt(
     () => injectionModule.sharedPreferences,
     preResolve: true,
   );
-  gh.factory<_i10.SubscribeAndListenToChannelEvents>(() =>
-      _i10.SubscribeAndListenToChannelEvents(
+  gh.factory<_i10.SubscribeAndListenToPresenceChannelEvents>(() =>
+      _i10.SubscribeAndListenToPresenceChannelEvents(
           gh<_i5.PusherChannelsConnectionRepository>()));
-  gh.factory<_i11.ChatListCubit>(
-      () => _i11.ChatListCubit(gh<_i10.SubscribeAndListenToChannelEvents>()));
+  gh.factory<_i11.ChatListCubit>(() =>
+      _i11.ChatListCubit(gh<_i10.SubscribeAndListenToPresenceChannelEvents>()));
   gh.factory<_i12.ConnectPusherChannelsClient>(() =>
       _i12.ConnectPusherChannelsClient(
           gh<_i5.PusherChannelsConnectionRepository>()));

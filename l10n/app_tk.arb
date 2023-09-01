@@ -31,6 +31,14 @@
       }
     }
   },
+  "messageOfUser": "Ulanyjy {userId}",
+  "@messageOfUser": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
   "enterChatRoom": "Çat otaga gir",
   "settings": "Sazlamalar",
   "navigateBack": "Yza",

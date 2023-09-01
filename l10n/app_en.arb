@@ -31,6 +31,15 @@
       }
     }
   },
+
+  "messageOfUser": "User {userId}",
+  "@messageOfUser": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
   "enterChatRoom": "Enter chat room",
   "settings": "Settings",
   "navigateBack": "Back",

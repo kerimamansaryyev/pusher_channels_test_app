@@ -93,6 +93,20 @@ final class PusherChannelsConnectionRepositoryImpl
                     ),
                   );
                   return;
+
+                case 'client-event':
+                  sink.add(
+                    PusherChannelsUserMessageEventModel(
+                      messageContent:
+                          event.tryGetDataAsMap()?['data']?.toString() ?? '',
+                      isMyMessage: false,
+                      channelName: event.channelName,
+                      data: event.data,
+                      dataAsMap: event.tryGetDataAsMap(),
+                      userId: event.userId,
+                      name: event.name,
+                    ),
+                  );
               }
             },
           ),

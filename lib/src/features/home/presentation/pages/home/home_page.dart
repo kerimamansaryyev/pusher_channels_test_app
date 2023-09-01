@@ -3,6 +3,7 @@ import 'package:pusher_channels_test_app/src/core/ui/section_button.dart';
 import 'package:pusher_channels_test_app/src/core/utils/theme/app_theme.dart';
 import 'package:pusher_channels_test_app/src/features/home/presentation/home_navigator.dart';
 import 'package:pusher_channels_test_app/src/localization/extensions.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -55,6 +56,19 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(
                 height: AppTheme.sectionsDividingSpace,
+              ),
+              CupertinoFormSection.insetGrouped(
+                margin: EdgeInsets.zero,
+                children: [
+                  SectionButton(
+                    iconData: CupertinoIcons.info,
+                    onPressed: () => launchUrlString(
+                      'https://test.pusher.com',
+                      mode: LaunchMode.externalApplication,
+                    ),
+                    title: context.translation.disclaimer,
+                  ),
+                ],
               ),
             ],
           );

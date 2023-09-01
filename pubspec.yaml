@@ -24,6 +24,7 @@ dependencies:
   injectable_generator: 2.1.5
   intl: 0.18.0
   shared_preferences: 2.1.1
+  url_launcher: ^6.1.14
 
 
 

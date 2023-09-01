@@ -40,6 +40,7 @@
       }
     }
   },
+  "disclaimer": "This app uses public connection to test.pusher.com only for testing purposes.",
   "enterChatRoom": "Enter chat room",
   "settings": "Settings",
   "navigateBack": "Back",

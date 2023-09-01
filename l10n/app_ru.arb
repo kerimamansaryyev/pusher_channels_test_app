@@ -7,6 +7,30 @@
       }
     }
   },
+  "userJoined": "Пользователь {userId} присоединился к чату",
+  "@userJoined": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
+  "userLeft": "Пользователь {userId} покинул чат",
+  "@userLeft": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
+  "chatBegan": "Вы вошли в чат, ваш идентификатор - {userId}",
+  "@chatBegan": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
   "enterChatRoom": "Зайти в чат комнату",
   "settings": "Настройки",
   "navigateBack": "Назад",

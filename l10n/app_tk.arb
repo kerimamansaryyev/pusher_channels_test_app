@@ -7,6 +7,30 @@
       }
     }
   },
+  "userJoined": "Ulanyjy {userId} otaga girdi",
+  "@userJoined": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
+  "userLeft": "Ulanyshy {userId} otagdan çykdy",
+  "@userLeft": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
+  "chatBegan": "Siz otaga girdiňiz, siziň ID-ňyz - {userId}",
+  "@chatBegan": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
   "enterChatRoom": "Çat otaga gir",
   "settings": "Sazlamalar",
   "navigateBack": "Yza",

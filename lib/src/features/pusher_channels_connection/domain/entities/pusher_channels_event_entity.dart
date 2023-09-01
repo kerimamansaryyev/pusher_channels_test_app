@@ -1,10 +1,19 @@
-import 'package:dart_pusher_channels/dart_pusher_channels.dart';
+library pusher_channels_event_entity;
 
-abstract interface class PusherChannelsEventEntity {
-  abstract final String name;
-  abstract final String? channelName;
-  abstract final String? userId;
-  abstract final Map<String, dynamic>? dataAsMap;
-  abstract final dynamic data;
-  abstract final bool isMyMessage;
+part '../../data/models/pusher_channels_chat_began_event_model.dart';
+part '../../data/models/pusher_channels_user_joined_event_model.dart';
+part '../../data/models/pusher_channels_user_left_event_model.dart';
+
+sealed class PusherChannelsEventEntity {
+  final String name;
+  final String? channelName;
+  final Map<String, dynamic>? dataAsMap;
+  final dynamic data;
+
+  PusherChannelsEventEntity({
+    required this.name,
+    required this.dataAsMap,
+    required this.data,
+    required this.channelName,
+  });
 }

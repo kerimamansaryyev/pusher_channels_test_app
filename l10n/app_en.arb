@@ -7,6 +7,30 @@
       }
     }
   },
+  "userJoined": "User {userId} joined to the chat",
+  "@userJoined": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
+  "userLeft": "User {userId} left the chat",
+  "@userLeft": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
+  "chatBegan": "You joined the chat, your user id is {userId}",
+  "@chatBegan": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
   "enterChatRoom": "Enter chat room",
   "settings": "Settings",
   "navigateBack": "Back",

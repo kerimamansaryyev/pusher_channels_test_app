@@ -58,7 +58,7 @@ final class PusherChannelsConnectionRepositoryImpl
               switch (event.name) {
                 case Channel.subscriptionSucceededEventName:
                   sink.add(
-                    PusherChannelsChatBeganEventModel(
+                    PusherChannelsChatBeganEventEntity(
                       channelName: event.channelName,
                       data: event.data,
                       dataAsMap: event.tryGetDataAsMap(),
@@ -69,7 +69,7 @@ final class PusherChannelsConnectionRepositoryImpl
                   return;
                 case Channel.memberAddedEventName:
                   sink.add(
-                    PusherChannelsUserJoinedEventModel(
+                    PusherChannelsUserJoinedEventEntity(
                       channelName: event.channelName,
                       data: event.data,
                       dataAsMap: event.tryGetDataAsMap(),
@@ -82,7 +82,7 @@ final class PusherChannelsConnectionRepositoryImpl
                   return;
                 case Channel.memberRemovedEventName:
                   sink.add(
-                    PusherChannelsUserLeftEventModel(
+                    PusherChannelsUserLeftEventEntity(
                       channelName: event.channelName,
                       data: event.data,
                       dataAsMap: event.tryGetDataAsMap(),
@@ -96,7 +96,7 @@ final class PusherChannelsConnectionRepositoryImpl
 
                 case 'client-event':
                   sink.add(
-                    PusherChannelsUserMessageEventModel(
+                    PusherChannelsUserMessageEventEntity(
                       messageContent:
                           event.tryGetDataAsMap()?['data']?.toString() ?? '',
                       isMyMessage: false,

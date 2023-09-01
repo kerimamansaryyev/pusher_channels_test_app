@@ -44,7 +44,7 @@ final class ChatListCubit extends Cubit<ChatListState> {
     }
 
     if (state is _WaitingForSubscription &&
-        pusherChannelsEventEntity is! PusherChannelsChatBeganEventModel) {
+        pusherChannelsEventEntity is! PusherChannelsChatBeganEventEntity) {
       _messages.add(pusherChannelsEventEntity);
       return;
     }

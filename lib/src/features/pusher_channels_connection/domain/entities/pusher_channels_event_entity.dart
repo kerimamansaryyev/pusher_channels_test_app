@@ -1,10 +1,5 @@
 library pusher_channels_event_entity;
 
-part '../../data/models/pusher_channels_chat_began_event_model.dart';
-part '../../data/models/pusher_channels_user_joined_event_model.dart';
-part '../../data/models/pusher_channels_user_left_event_model.dart';
-part '../../data/models/pusher_channels_user_message_event_model.dart';
-
 sealed class PusherChannelsEventEntity {
   final String name;
   final String? channelName;
@@ -16,5 +11,61 @@ sealed class PusherChannelsEventEntity {
     required this.dataAsMap,
     required this.data,
     required this.channelName,
+  });
+}
+
+final class PusherChannelsChatBeganEventEntity
+    extends PusherChannelsEventEntity {
+  final String? myUserId;
+
+  PusherChannelsChatBeganEventEntity({
+    required super.name,
+    required super.dataAsMap,
+    required super.data,
+    required super.channelName,
+    required this.myUserId,
+  });
+}
+
+final class PusherChannelsUserJoinedEventEntity
+    extends PusherChannelsEventEntity {
+  final String? userId;
+
+  PusherChannelsUserJoinedEventEntity({
+    required super.name,
+    required super.dataAsMap,
+    required super.data,
+    required super.channelName,
+    required this.userId,
+  });
+}
+
+final class PusherChannelsUserLeftEventEntity
+    extends PusherChannelsEventEntity {
+  final String? userId;
+
+  PusherChannelsUserLeftEventEntity({
+    required super.name,
+    required super.dataAsMap,
+    required super.data,
+    required super.channelName,
+    required this.userId,
+  });
+}
+
+final class PusherChannelsUserMessageEventEntity
+    extends PusherChannelsEventEntity {
+  final String? userId;
+  final String messageContent;
+  final bool isMyMessage;
+
+  PusherChannelsUserMessageEventEntity({
+    required super.name,
+    required super.dataAsMap,
+    required super.data,
+    required super.channelName,
+    required this.isMyMessage,
+    required this.userId,
+    required this.messageContent,
   });
 }

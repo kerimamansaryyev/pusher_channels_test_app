@@ -95,13 +95,13 @@ class _ChatPageState extends State<ChatPage> {
                                     bottom: AppTheme.sectionsDividingSpace,
                                   ),
                                   child: switch (eventEntity) {
-                                    PusherChannelsChatBeganEventModel() ||
-                                    PusherChannelsUserJoinedEventModel() ||
-                                    PusherChannelsUserLeftEventModel() =>
+                                    PusherChannelsChatBeganEventEntity() ||
+                                    PusherChannelsUserJoinedEventEntity() ||
+                                    PusherChannelsUserLeftEventEntity() =>
                                       _EventNotification(
                                         eventEntity: eventEntity,
                                       ),
-                                    PusherChannelsUserMessageEventModel() =>
+                                    PusherChannelsUserMessageEventEntity() =>
                                       _MessageBubble(
                                         eventEntity: eventEntity,
                                       ),
@@ -153,7 +153,7 @@ class _ChatPageState extends State<ChatPage> {
 }
 
 class _MessageBubble extends StatelessWidget {
-  final PusherChannelsUserMessageEventModel eventEntity;
+  final PusherChannelsUserMessageEventEntity eventEntity;
 
   const _MessageBubble({
     required this.eventEntity,
@@ -242,17 +242,17 @@ class _EventNotification extends StatelessWidget {
           child: Center(
             child: Text(
               switch (eventEntity) {
-                PusherChannelsChatBeganEventModel(
+                PusherChannelsChatBeganEventEntity(
                   myUserId: final myUserId,
                 ) =>
                   context.translation.chatBegan(
                     myUserId.toString(),
                   ),
-                PusherChannelsUserJoinedEventModel(userId: final userId) =>
+                PusherChannelsUserJoinedEventEntity(userId: final userId) =>
                   context.translation.userJoined(
                     userId.toString(),
                   ),
-                PusherChannelsUserLeftEventModel(userId: final userId) =>
+                PusherChannelsUserLeftEventEntity(userId: final userId) =>
                   context.translation.userLeft(
                     userId.toString(),
                   ),

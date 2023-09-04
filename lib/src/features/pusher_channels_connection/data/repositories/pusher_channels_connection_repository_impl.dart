@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:dart_pusher_channels/dart_pusher_channels.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pusher_channels_test_app/src/core/utils/either/either.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/data/constants/pusher_channels_connection_constants.dart';
+import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/entities/message_not_triggered_failure.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/entities/pusher_channels_connection_result.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/repositories/pusher_channels_connection_repository.dart';
@@ -19,6 +21,43 @@ final class PusherChannelsConnectionRepositoryImpl
 
   PusherChannelsConnectionRepositoryImpl() {
     resetToDefaults();
+  }
+
+  @override
+  Either<MessageNotTriggeredFailure, PusherChannelsUserMessageEventEntity>
+      triggerClientEventOnPresenceChannel({
+    required String message,
+    required String channelName,
+    required String eventName,
+  }) {
+    final dataToSend = {
+      'data': message,
+    };
+
+    final presenceChannel = _createIfNotCreatedPresenceChannel(
+      channelName,
+    )?..trigger(
+        eventName: eventName,
+        data: dataToSend,
+      );
+
+    final myId = presenceChannel?.state?.members?.getMyId();
+
+    if (presenceChannel == null || myId == null) {
+      return const Left(MessageNotTriggeredFailure());
+    }
+
+    return Right(
+      PusherChannelsUserMessageEventEntity(
+        name: eventName,
+        channelName: presenceChannel.name,
+        data: dataToSend,
+        dataAsMap: dataToSend,
+        isMyMessage: true,
+        userId: presenceChannel.state?.members?.getMyId(),
+        messageContent: message,
+      ),
+    );
   }
 
   @override
@@ -46,7 +85,7 @@ final class PusherChannelsConnectionRepositoryImpl
     required String channelName,
     String? eventNameToBind,
   }) {
-    final presenceChannel = _createPresenceChannel(channelName);
+    final presenceChannel = _createIfNotCreatedPresenceChannel(channelName);
     final stream = eventNameToBind == null
         ? presenceChannel?.bindToAll()
         : presenceChannel?.bind(eventNameToBind);
@@ -118,7 +157,7 @@ final class PusherChannelsConnectionRepositoryImpl
   Stream<PusherChannelsConnectionResult> onConnectionChanged() =>
       _connectionStreamController.stream;
 
-  PresenceChannel? _createPresenceChannel(String channelName) {
+  PresenceChannel? _createIfNotCreatedPresenceChannel(String channelName) {
     final presenceChannel = _pusherChannelsClient?.presenceChannel(
       channelName,
       authorizationDelegate:

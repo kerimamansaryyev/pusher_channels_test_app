@@ -30,6 +30,15 @@ final class ChatListCubit extends Cubit<ChatListState> {
     return super.close();
   }
 
+  void pushOwnMessage(PusherChannelsUserMessageEventEntity message) => emit(
+        _Succeeded(
+          messages: _messages
+            ..add(
+              message,
+            ),
+        ),
+      );
+
   void startListening() {
     _messagesStreamSubs?.cancel();
     _messagesStreamSubs = null;

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pusher_channels_test_app/src/core/utils/theme/app_theme.dart';
 import 'package:pusher_channels_test_app/src/core/utils/theme/app_typography.dart';
 import 'package:pusher_channels_test_app/src/features/chat/presentation/blocs/chat_list_cubit.dart';
+import 'package:pusher_channels_test_app/src/features/chat/presentation/blocs/chat_message_trigger_cubit.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/entities/pusher_channels_connection_result.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/presentation/blocs/pusher_channels_connection_cubit.dart';
@@ -20,6 +21,8 @@ class _ChatPageState extends State<ChatPage> {
   final PusherChannelsConnectionCubit _pusherChannelsConnectionCubit =
       PusherChannelsConnectionCubit.fromEnvironment();
   final ChatListCubit _chatListCubit = ChatListCubit.fromEnvironment();
+  final ChatMessageTriggerCubit _chatMessageTriggerCubit =
+      ChatMessageTriggerCubit.fromEnvironment();
 
   @override
   void initState() {
@@ -36,6 +39,11 @@ class _ChatPageState extends State<ChatPage> {
       _chatListCubit.resetToWaitingForSubscription();
     }
   }
+
+  void _triggerMessage(String message) =>
+      _chatMessageTriggerCubit.triggerClientEvent(
+        message: message,
+      );
 
   @override
   void dispose() {
@@ -61,6 +69,12 @@ class _ChatPageState extends State<ChatPage> {
         builder: (context) {
           return MultiBlocListener(
             listeners: [
+              BlocListener<ChatMessageTriggerCubit, ChatMessageTriggerState>(
+                bloc: _chatMessageTriggerCubit,
+                listener: (context, state) => state.whenOrNull(
+                  triggered: _chatListCubit.pushOwnMessage,
+                ),
+              ),
               BlocListener<PusherChannelsConnectionCubit,
                   PusherChannelsConnectionState>(
                 bloc: _pusherChannelsConnectionCubit,
@@ -129,7 +143,7 @@ class _ChatPageState extends State<ChatPage> {
                                     horizontal: 16,
                                   ),
                                   child: CupertinoButton.filled(
-                                    onPressed: () {},
+                                    onPressed: () => _triggerMessage('message'),
                                     child: Text(
                                       context.translation.triggerClientEvent,
                                     ),
@@ -196,21 +210,23 @@ class _MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final userId = eventEntity.userId;
 
-    const paddingOfUserLabel = 7.0;
-
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: eventEntity.isMyMessage
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         children: [
           Flexible(
             child: Column(
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: CupertinoColors.activeGreen,
+                    color: eventEntity.isMyMessage
+                        ? CupertinoColors.activeBlue
+                        : CupertinoColors.activeGreen,
                     borderRadius: BorderRadius.circular(
                       8,
                     ),
@@ -229,20 +245,14 @@ class _MessageBubble extends StatelessWidget {
                   const SizedBox(
                     height: 6,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      right: eventEntity.isMyMessage ? paddingOfUserLabel : 0,
-                      left: eventEntity.isMyMessage ? 0 : paddingOfUserLabel,
-                    ),
-                    child: Text(
-                      context.translation.messageOfUser(userId),
-                      style: AppTypographies.b4.style(context).copyWith(
-                            color: CupertinoDynamicColor.resolve(
-                              CupertinoColors.secondaryLabel,
-                              context,
-                            ),
+                  Text(
+                    context.translation.messageOfUser(userId),
+                    style: AppTypographies.b4.style(context).copyWith(
+                          color: CupertinoDynamicColor.resolve(
+                            CupertinoColors.secondaryLabel,
+                            context,
                           ),
-                    ),
+                        ),
                   ),
                 ]
               ],

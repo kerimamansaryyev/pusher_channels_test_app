@@ -15,6 +15,9 @@ abstract interface class PusherChannelsConnectionRepository {
     required String channelName,
     required String eventName,
   });
+  void resetPresenceChannelState({
+    required String channelName,
+  });
   void resetToDefaults();
   void connect();
 }

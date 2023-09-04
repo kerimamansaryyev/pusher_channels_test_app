@@ -47,5 +47,7 @@
   "language": "Language",
   "theme": "Theme",
   "chatRoom": "Chat room",
-  "triggerClientEvent": "Trigger client event"
+  "triggerClientEvent": "Trigger client event",
+  "error": "Error",
+  "messageNotTriggered": "The message could not be triggered"
 }

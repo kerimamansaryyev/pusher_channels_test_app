@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pusher_channels_test_app/src/di/injection_container.dart';
+import 'package:pusher_channels_test_app/src/features/chat/domain/use-cases/reset_presence_channel_state.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart';
 import 'package:pusher_channels_test_app/src/features/chat/domain/use-cases/subscribe_and_listen_to_presence_channel_events.dart';
 
@@ -11,8 +12,10 @@ final class ChatListCubit extends Cubit<ChatListState> {
   final List<PusherChannelsEventEntity> _messages = [];
   final SubscribeAndListenToPresenceChannelEvents
       _subscribeAndListenToChannelEvents;
+  final ResetPresenceChannelState _resetPresenceChannelState;
 
   ChatListCubit(
+    this._resetPresenceChannelState,
     this._subscribeAndListenToChannelEvents,
   ) : super(
           const _WaitingForSubscription(),
@@ -21,6 +24,7 @@ final class ChatListCubit extends Cubit<ChatListState> {
   factory ChatListCubit.fromEnvironment() => serviceLocator<ChatListCubit>();
 
   void resetToWaitingForSubscription() {
+    _resetPresenceChannelState();
     emit(const _WaitingForSubscription());
   }
 

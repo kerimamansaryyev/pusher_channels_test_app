@@ -46,5 +46,7 @@
   "language": "Язык",
   "theme": "Тема",
   "chatRoom": "Чат комната",
-  "triggerClientEvent": "Отправить сообщение"
+  "triggerClientEvent": "Отправить сообщение",
+  "error": "Ошибка",
+  "messageNotTriggered": "Не удалось отправить сообщение"
 }

@@ -61,6 +61,16 @@ final class PusherChannelsConnectionRepositoryImpl
   }
 
   @override
+  void resetPresenceChannelState({required String channelName}) {
+    _pusherChannelsClient?.presenceChannel(
+      channelName,
+      authorizationDelegate:
+          PusherChannelsConnectionConstants.createAuthorizationDelegate(),
+      forceCreateNewInstance: true,
+    );
+  }
+
+  @override
   void connect() {
     _pusherChannelsClient?.connect();
   }

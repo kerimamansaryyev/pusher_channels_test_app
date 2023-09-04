@@ -31,7 +31,7 @@ class AppNavigator {
   }) =>
       _navigator(
         context,
-      );
+      )..pop();
 
   static NavigatorState _navigator(
     BuildContext? context, {

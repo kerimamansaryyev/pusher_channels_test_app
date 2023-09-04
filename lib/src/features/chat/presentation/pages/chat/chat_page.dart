@@ -1,10 +1,13 @@
 import 'package:adaptix/adaptix.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pusher_channels_test_app/src/core/utils/theme/app_theme.dart';
 import 'package:pusher_channels_test_app/src/core/utils/theme/app_typography.dart';
 import 'package:pusher_channels_test_app/src/features/chat/presentation/blocs/chat_list_cubit.dart';
 import 'package:pusher_channels_test_app/src/features/chat/presentation/blocs/chat_message_trigger_cubit.dart';
+import 'package:pusher_channels_test_app/src/features/chat/presentation/chat_navigator.dart';
+import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/entities/message_not_triggered_failure.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/entities/pusher_channels_connection_result.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/presentation/blocs/pusher_channels_connection_cubit.dart';
@@ -18,11 +21,13 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  final ScrollController _scrollController = ScrollController();
   final PusherChannelsConnectionCubit _pusherChannelsConnectionCubit =
       PusherChannelsConnectionCubit.fromEnvironment();
   final ChatListCubit _chatListCubit = ChatListCubit.fromEnvironment();
   final ChatMessageTriggerCubit _chatMessageTriggerCubit =
       ChatMessageTriggerCubit.fromEnvironment();
+  final ChatNavigator _chatNavigator = ChatNavigator.fromEnvironment();
 
   @override
   void initState() {
@@ -72,7 +77,27 @@ class _ChatPageState extends State<ChatPage> {
               BlocListener<ChatMessageTriggerCubit, ChatMessageTriggerState>(
                 bloc: _chatMessageTriggerCubit,
                 listener: (context, state) => state.whenOrNull(
-                  triggered: _chatListCubit.pushOwnMessage,
+                  triggered: (message) {
+                    _chatListCubit.pushOwnMessage(message);
+                    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                      _scrollController.animateTo(
+                        _scrollController.position.maxScrollExtent,
+                        duration: const Duration(
+                          milliseconds: 200,
+                        ),
+                        curve: Curves.ease,
+                      );
+                    });
+                  },
+                  failed: (failure) {
+                    if (failure case MessageNotTriggeredFailure()) {
+                      _chatNavigator.showBasicAlert(
+                        context,
+                        title: context.translation.error,
+                        description: context.translation.messageNotTriggered,
+                      );
+                    }
+                  },
                 ),
               ),
               BlocListener<PusherChannelsConnectionCubit,
@@ -96,6 +121,7 @@ class _ChatPageState extends State<ChatPage> {
                         children: [
                           Expanded(
                             child: CustomScrollView(
+                              controller: _scrollController,
                               slivers: [
                                 SliverPadding(
                                   padding: EdgeInsets.only(
@@ -143,7 +169,11 @@ class _ChatPageState extends State<ChatPage> {
                                     horizontal: 16,
                                   ),
                                   child: CupertinoButton.filled(
-                                    onPressed: () => _triggerMessage('message'),
+                                    onPressed: () =>
+                                        _chatNavigator.showMessageOptionsDialog(
+                                      context,
+                                      onMessageChosen: _triggerMessage,
+                                    ),
                                     child: Text(
                                       context.translation.triggerClientEvent,
                                     ),

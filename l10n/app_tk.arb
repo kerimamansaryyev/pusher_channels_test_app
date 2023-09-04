@@ -46,5 +46,8 @@
   "language": "Dili",
   "theme": "Garaňky keşbi",
   "chatRoom": "Çat otagy",
-  "triggerClientEvent": "Habar ugratmak"
+  "triggerClientEvent": "Habar ugratmak",
+  "messageNotSend": "Habary ugradyp bolmady",
+  "error": "Ýalňyş",
+  "messageNotTriggered": "Habary ugradyp bolmady"
 }

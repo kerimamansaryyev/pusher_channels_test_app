@@ -6,6 +6,7 @@ import 'package:pusher_channels_test_app/src/core/utils/theme/app_theme.dart';
 import 'package:pusher_channels_test_app/src/core/utils/theme/app_typography.dart';
 import 'package:pusher_channels_test_app/src/features/chat/presentation/blocs/chat_list_cubit.dart';
 import 'package:pusher_channels_test_app/src/features/chat/presentation/blocs/chat_message_trigger_cubit.dart';
+import 'package:pusher_channels_test_app/src/features/chat/presentation/blocs/chat_new_messages_button_visibility.dart';
 import 'package:pusher_channels_test_app/src/features/chat/presentation/chat_navigator.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/entities/message_not_triggered_failure.dart';
 import 'package:pusher_channels_test_app/src/features/pusher_channels_connection/domain/entities/pusher_channels_connection_result.dart';
@@ -21,6 +22,11 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  bool _isScrollingToBottom = false;
+
+  final ChatNewMessagesButtonVisibilityCubit
+      _chatNewMessagesButtonVisibilityCubit =
+      ChatNewMessagesButtonVisibilityCubit.fromEnvironment();
   final ScrollController _scrollController = ScrollController();
   final PusherChannelsConnectionCubit _pusherChannelsConnectionCubit =
       PusherChannelsConnectionCubit.fromEnvironment();
@@ -32,7 +38,30 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     _pusherChannelsConnectionCubit.connect();
+    _scrollController.addListener(_scrollListener);
     super.initState();
+  }
+
+  double get _currentScrollOffsetDifference {
+    return _scrollController.position.maxScrollExtent -
+        _scrollController.offset;
+  }
+
+  void _scrollToBottom() async {
+    setState(() {
+      _isScrollingToBottom = true;
+    });
+
+    await _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent + 10000,
+      duration: const Duration(
+        seconds: 1,
+      ),
+      curve: Curves.ease,
+    );
+    setState(() {
+      _isScrollingToBottom = false;
+    });
   }
 
   void _onConnectionChanged(PusherChannelsConnectionState connectionState) {
@@ -49,6 +78,35 @@ class _ChatPageState extends State<ChatPage> {
       _chatMessageTriggerCubit.triggerClientEvent(
         message: message,
       );
+
+  void _whenGotNewMessages(ChatListState chatListState) {
+    chatListState.when(
+      succeeded: (messages) {
+        if (messages.isEmpty) {
+          return;
+        }
+        final newestMessage = messages.last;
+
+        if (newestMessage is! PusherChannelsUserMessageEventEntity ||
+            newestMessage.isMyMessage) {
+          return;
+        }
+
+        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+          if (_currentScrollOffsetDifference > 15) {
+            _chatNewMessagesButtonVisibilityCubit.setVisible();
+          }
+        });
+      },
+      waitingForSubscription: () => null,
+    );
+  }
+
+  void _scrollListener() {
+    if (_currentScrollOffsetDifference < 5) {
+      _chatNewMessagesButtonVisibilityCubit.setInvisible();
+    }
+  }
 
   @override
   void dispose() {
@@ -74,19 +132,17 @@ class _ChatPageState extends State<ChatPage> {
         builder: (context) {
           return MultiBlocListener(
             listeners: [
+              BlocListener<ChatListCubit, ChatListState>(
+                bloc: _chatListCubit,
+                listener: (context, state) => _whenGotNewMessages(state),
+              ),
               BlocListener<ChatMessageTriggerCubit, ChatMessageTriggerState>(
                 bloc: _chatMessageTriggerCubit,
                 listener: (context, state) => state.whenOrNull(
                   triggered: (message) {
                     _chatListCubit.pushOwnMessage(message);
                     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-                      _scrollController.animateTo(
-                        _scrollController.position.maxScrollExtent,
-                        duration: const Duration(
-                          milliseconds: 200,
-                        ),
-                        curve: Curves.ease,
-                      );
+                      _scrollToBottom();
                     });
                   },
                   failed: (failure) {
@@ -120,41 +176,90 @@ class _ChatPageState extends State<ChatPage> {
                       succeeded: (messages) => Column(
                         children: [
                           Expanded(
-                            child: CustomScrollView(
-                              controller: _scrollController,
-                              slivers: [
-                                SliverPadding(
-                                  padding: EdgeInsets.only(
-                                    top: AppTheme.navBarPadding(context),
-                                  ),
-                                  sliver: SliverList.builder(
-                                    itemBuilder: (context, index) {
-                                      final eventEntity = messages[index];
-
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                        ).copyWith(
-                                          bottom:
-                                              AppTheme.sectionsDividingSpace,
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: CustomScrollView(
+                                    physics: _isScrollingToBottom
+                                        ? const ClampingScrollPhysics()
+                                        : null,
+                                    controller: _scrollController,
+                                    slivers: [
+                                      SliverPadding(
+                                        padding: EdgeInsets.only(
+                                          top: AppTheme.navBarPadding(context),
                                         ),
-                                        child: switch (eventEntity) {
-                                          PusherChannelsChatBeganEventEntity() ||
-                                          PusherChannelsUserJoinedEventEntity() ||
-                                          PusherChannelsUserLeftEventEntity() =>
-                                            _EventNotification(
-                                              eventEntity: eventEntity,
-                                            ),
-                                          PusherChannelsUserMessageEventEntity() =>
-                                            _MessageBubble(
-                                              eventEntity: eventEntity,
-                                            ),
-                                        },
-                                      );
-                                    },
-                                    itemCount: messages.length,
+                                        sliver: SliverList.builder(
+                                          itemBuilder: (context, index) {
+                                            final eventEntity = messages[index];
+
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 16,
+                                              ).copyWith(
+                                                bottom: AppTheme
+                                                    .sectionsDividingSpace,
+                                              ),
+                                              child: switch (eventEntity) {
+                                                PusherChannelsChatBeganEventEntity() ||
+                                                PusherChannelsUserJoinedEventEntity() ||
+                                                PusherChannelsUserLeftEventEntity() =>
+                                                  _EventNotification(
+                                                    eventEntity: eventEntity,
+                                                  ),
+                                                PusherChannelsUserMessageEventEntity() =>
+                                                  _MessageBubble(
+                                                    eventEntity: eventEntity,
+                                                  ),
+                                              },
+                                            );
+                                          },
+                                          itemCount: messages.length,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
+                                Positioned(
+                                  right: 0,
+                                  bottom: 8,
+                                  child: BlocBuilder<
+                                      ChatNewMessagesButtonVisibilityCubit,
+                                      ChatNewMessagesButtonVisibilityState>(
+                                    bloc: _chatNewMessagesButtonVisibilityCubit,
+                                    builder: (context, state) {
+                                      return Visibility(
+                                        visible: state.isVisible,
+                                        maintainSize: false,
+                                        child: CupertinoButton(
+                                          onPressed: () {
+                                            SchedulerBinding.instance
+                                                .addPostFrameCallback(
+                                                    (timeStamp) {
+                                              _scrollToBottom();
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: const BoxDecoration(
+                                              color: CupertinoColors.activeBlue,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            width: 50,
+                                            height: 50,
+                                            child: const Center(
+                                              child: Icon(
+                                                CupertinoIcons.envelope_badge,
+                                                size: 30,
+                                                color: CupertinoColors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
                               ],
                             ),
                           ),

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pusher_channels_test_app/src/core/utils/either/either.dart';
+import 'package:pusher_channels_test_app/core/utils/either/either.dart';
 
 Either<String, int> success() {
   return const Right(1);

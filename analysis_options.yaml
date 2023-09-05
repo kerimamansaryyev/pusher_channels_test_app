@@ -2,7 +2,7 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
-    - lib/src/di/injection_container.config.dart
+    - lib/di/injection_container.config.dart
     - lib/**.g.dart
     - lib/**.freezed.dart
   errors:

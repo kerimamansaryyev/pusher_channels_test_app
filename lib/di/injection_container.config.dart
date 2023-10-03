@@ -13,7 +13,7 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 import 'package:shared_preferences/shared_preferences.dart' as _i12;
 
-import '../core/di/injection_module.dart' as _i26;
+import '../core/di/injection_module.dart' as _i27;
 import '../features/chat/domain/use-cases/reset_presence_channel_state.dart'
     as _i9;
 import '../features/chat/domain/use-cases/subscribe_and_listen_to_presence_channel_events.dart'
@@ -44,10 +44,10 @@ import '../features/settings/data/repositories/settings_repository_impl.dart'
 import '../features/settings/data/storages/settings_preferences.dart' as _i20;
 import '../features/settings/domain/repositories/settings_repository.dart'
     as _i21;
-import '../features/settings/domain/stores/settings_store.dart' as _i25;
+import '../features/settings/domain/stores/settings_store.dart' as _i26;
 import '../features/settings/domain/usecases/get_settings_records.dart' as _i23;
-import '../features/settings/domain/usecases/save_settings_records.dart'
-    as _i24;
+import '../features/settings/domain/usecases/save_locale.dart' as _i24;
+import '../features/settings/domain/usecases/save_theme.dart' as _i25;
 import '../features/settings/presentation/settings_navigator.dart' as _i11;
 import '../navigation/app_navigator.dart' as _i3;
 
@@ -115,16 +115,19 @@ Future<_i1.GetIt> $initGetIt(
       () => _i22.SettingsRepositoryImpl(gh<_i20.SettingsPreferences>()));
   gh.factory<_i23.GetSettingsRecords>(
       () => _i23.GetSettingsRecords(gh<_i21.SettingsRepository>()));
-  gh.factory<_i24.SaveSettingsRecords>(
-      () => _i24.SaveSettingsRecords(gh<_i21.SettingsRepository>()));
-  await gh.singletonAsync<_i25.SettingsStoreCubit>(
-    () => _i25.SettingsStoreCubit.internal(
+  gh.factory<_i24.SaveLocale>(
+      () => _i24.SaveLocale(gh<_i21.SettingsRepository>()));
+  gh.factory<_i25.SaveTheme>(
+      () => _i25.SaveTheme(gh<_i21.SettingsRepository>()));
+  await gh.singletonAsync<_i26.SettingsStoreCubit>(
+    () => _i26.SettingsStoreCubit.internal(
       gh<_i23.GetSettingsRecords>(),
-      gh<_i24.SaveSettingsRecords>(),
+      gh<_i24.SaveLocale>(),
+      gh<_i25.SaveTheme>(),
     ),
     preResolve: true,
   );
   return getIt;
 }
 
-class _$InjectionModule extends _i26.InjectionModule {}
+class _$InjectionModule extends _i27.InjectionModule {}

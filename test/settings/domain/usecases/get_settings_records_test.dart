@@ -61,10 +61,10 @@ void main() {
 
         provideDummy<Either<Failure<Exception>, String?>>(const Right(null));
 
-        const expectedLocaleCode = 'es';
+        const esLocaleCode = 'es';
 
         when(settingsRepository.getLocaleCode())
-            .thenAnswer((_) async => const Right(expectedLocaleCode));
+            .thenAnswer((_) async => const Right(esLocaleCode));
 
         final getSettingsRecord = getIt<GetSettingsRecords>();
 

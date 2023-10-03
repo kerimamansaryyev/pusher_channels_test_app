@@ -5,16 +5,19 @@ import 'package:pusher_channels_test_app/core/utils/either/either.dart';
 import 'package:pusher_channels_test_app/core/utils/theme/app_theme.dart';
 import 'package:pusher_channels_test_app/di/injection_container.dart';
 import 'package:pusher_channels_test_app/features/settings/domain/usecases/get_settings_records.dart';
-import 'package:pusher_channels_test_app/features/settings/domain/usecases/save_settings_records.dart';
+import 'package:pusher_channels_test_app/features/settings/domain/usecases/save_locale.dart';
+import 'package:pusher_channels_test_app/features/settings/domain/usecases/save_theme.dart';
 import 'package:pusher_channels_test_app/localization/localization_service.dart';
 
 @singleton
 final class SettingsStoreCubit extends Cubit<SettingsStoreState> {
-  final SaveSettingsRecords _saveSettingsRecords;
+  final SaveLocale _saveLocale;
+  final SaveTheme _saveTheme;
 
   SettingsStoreCubit._(
     super.initialState,
-    this._saveSettingsRecords,
+    this._saveLocale,
+    this._saveTheme,
   );
 
   factory SettingsStoreCubit.fromEnvironment() =>
@@ -23,8 +26,7 @@ final class SettingsStoreCubit extends Cubit<SettingsStoreState> {
   void toggleTheme(bool isDark) {
     final theme = isDark ? const AppTheme.dark() : const AppTheme.light();
 
-    _saveSettingsRecords(
-      localeCode: state.locale.languageCode,
+    _saveTheme(
       themeName: theme.name,
     );
 
@@ -36,9 +38,8 @@ final class SettingsStoreCubit extends Cubit<SettingsStoreState> {
   }
 
   void chooseLanguage(Locale locale) {
-    _saveSettingsRecords(
+    _saveLocale(
       localeCode: locale.languageCode,
-      themeName: state.theme?.name,
     );
 
     emit(
@@ -53,7 +54,8 @@ final class SettingsStoreCubit extends Cubit<SettingsStoreState> {
   )
   static Future<SettingsStoreCubit> internal(
     GetSettingsRecords getSettingsRecords,
-    SaveSettingsRecords saveSettingsRecords,
+    SaveLocale saveLocale,
+    SaveTheme saveTheme,
   ) async {
     final result = await getSettingsRecords();
     final record = result.tryGetRight();
@@ -65,7 +67,8 @@ final class SettingsStoreCubit extends Cubit<SettingsStoreState> {
         locale: locale ?? LocalizationService.fallbackLocale,
         theme: theme,
       ),
-      saveSettingsRecords,
+      saveLocale,
+      saveTheme,
     );
   }
 }

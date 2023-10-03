@@ -10,6 +10,16 @@ import 'package:pusher_channels_test_app/localization/localization_service.dart'
 
 import '../../../mocks/test_mocks.mocks.dart';
 
+final class _DummyFailure implements Failure {
+  const _DummyFailure();
+
+  @override
+  Exception? get exception => throw UnimplementedError();
+
+  @override
+  StackTrace? get stackTrace => throw UnimplementedError();
+}
+
 void main() {
   group('GetSettingsRecords use-case test', () {
     final getIt = GetIt.instance;
@@ -30,7 +40,8 @@ void main() {
       () async {
         await getIt.allReady();
 
-        provideDummy<Either<Failure<Exception>, String?>>(const Right(null));
+        provideDummy<Either<Failure<Exception>, String?>>(
+            const Left(_DummyFailure()));
 
         const expectedLocaleCode = LocalizationService.ruLocaleCode;
         final expectedThemeName = const AppTheme.dark().name;
@@ -59,7 +70,8 @@ void main() {
       () async {
         await getIt.allReady();
 
-        provideDummy<Either<Failure<Exception>, String?>>(const Right(null));
+        provideDummy<Either<Failure<Exception>, String?>>(
+            const Left(_DummyFailure()));
 
         const esLocaleCode = 'es';
 

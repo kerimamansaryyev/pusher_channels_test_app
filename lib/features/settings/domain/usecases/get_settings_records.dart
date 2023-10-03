@@ -4,6 +4,7 @@ import 'package:pusher_channels_test_app/core/domain/failure.dart';
 import 'package:pusher_channels_test_app/core/utils/either/either.dart';
 import 'package:pusher_channels_test_app/core/utils/theme/app_theme.dart';
 import 'package:pusher_channels_test_app/features/settings/domain/repositories/settings_repository.dart';
+import 'package:pusher_channels_test_app/localization/localization_service.dart';
 
 typedef SettingsRecord = (AppTheme?, Locale? locale);
 
@@ -30,12 +31,18 @@ final class GetSettingsRecords {
     }
 
     final themeName = themeNameResult.tryGetRight();
-    final locale = localeCodeResult.tryGetRight();
+    var localeFromMemory = localeCodeResult.tryGetRight();
+
+    if (!LocalizationService.supportedLocales
+        .map((e) => e.languageCode)
+        .contains(localeFromMemory)) {
+      localeFromMemory = null;
+    }
 
     return Right(
       (
         themeName == null ? null : AppTheme.findByName(themeName),
-        locale == null ? null : Locale(locale),
+        localeFromMemory == null ? null : Locale(localeFromMemory),
       ),
     );
   }

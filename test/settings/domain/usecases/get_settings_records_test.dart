@@ -26,6 +26,7 @@ void main() {
     final settingsRepository = MockSettingsRepository();
 
     setUp(() {
+      clearInteractions(settingsRepository);
       getIt.reset();
       getIt.registerFactory<SettingsRepository>(() => settingsRepository);
       getIt.registerFactory<GetSettingsRecords>(
@@ -41,7 +42,8 @@ void main() {
         await getIt.allReady();
 
         provideDummy<Either<Failure<Exception>, String?>>(
-            const Left(_DummyFailure()));
+          const Left(_DummyFailure()),
+        );
 
         const expectedLocaleCode = LocalizationService.ruLocaleCode;
         final expectedThemeName = const AppTheme.dark().name;
@@ -62,6 +64,9 @@ void main() {
           expect(result.$1?.name, expectedThemeName);
           expect(result.$2?.languageCode, expectedLocaleCode);
         }
+
+        verify(settingsRepository.getLocaleCode()).called(1);
+        verify(settingsRepository.getThemeName()).called(1);
       },
     );
 
@@ -71,7 +76,8 @@ void main() {
         await getIt.allReady();
 
         provideDummy<Either<Failure<Exception>, String?>>(
-            const Left(_DummyFailure()));
+          const Left(_DummyFailure()),
+        );
 
         const esLocaleCode = 'es';
 
@@ -88,9 +94,10 @@ void main() {
         if (result != null) {
           expect(result.$2?.languageCode, null);
         }
+
+        verify(settingsRepository.getLocaleCode()).called(1);
+        verify(settingsRepository.getThemeName()).called(1);
       },
     );
-
-    getIt.reset();
   });
 }

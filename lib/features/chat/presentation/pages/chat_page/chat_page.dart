@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:adaptix/adaptix.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
@@ -25,9 +27,14 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   bool _isScrollingToBottom = false;
 
+  static const _subsWaitingTimeoutDuration = Duration(
+    seconds: 5,
+  );
+
   final ChatNewMessagesButtonVisibilityCubit
       _chatNewMessagesButtonVisibilityCubit =
       ChatNewMessagesButtonVisibilityCubit.fromEnvironment();
+
   final ScrollController _scrollController = ScrollController();
   final PusherChannelsConnectionCubit _pusherChannelsConnectionCubit =
       PusherChannelsConnectionCubit.fromEnvironment();
@@ -69,6 +76,7 @@ class _ChatPageState extends State<ChatPage> {
     if (connectionState.connectionResult
         case PusherChannelsConnectionSucceeded()) {
       _chatListCubit.startListening();
+      _checkIfWaitingLongForSubscription();
     } else if (connectionState.connectionResult
         case PusherChannelsConnectionPending()) {
       _chatListCubit.resetToWaitingForSubscription();
@@ -101,6 +109,23 @@ class _ChatPageState extends State<ChatPage> {
       },
       waitingForSubscription: () => null,
     );
+  }
+
+  void _checkIfWaitingLongForSubscription() async {
+    try {
+      await Future.delayed(_subsWaitingTimeoutDuration);
+      _chatListCubit.state.when(
+        succeeded: (_) {
+          return;
+        },
+        waitingForSubscription: () => throw TimeoutException(null),
+      );
+    } on TimeoutException catch (exception, stackTrace) {
+      _pusherChannelsConnectionCubit.breakConnectionWithError(
+        exception,
+        stackTrace,
+      );
+    }
   }
 
   void _scrollListener() {
@@ -222,58 +247,19 @@ class _ChatPageState extends State<ChatPage> {
                                     ],
                                   ),
                                 ),
-                                Positioned(
-                                  right: 0,
-                                  bottom: 8,
-                                  child: BlocBuilder<
-                                      ChatNewMessagesButtonVisibilityCubit,
-                                      ChatNewMessagesButtonVisibilityState>(
-                                    bloc: _chatNewMessagesButtonVisibilityCubit,
-                                    builder: (context, state) {
-                                      return Visibility(
-                                        visible: state.isVisible,
-                                        maintainSize: false,
-                                        child: CupertinoButton(
-                                          onPressed: () {
-                                            SchedulerBinding.instance
-                                                .addPostFrameCallback(
-                                                    (timeStamp) {
-                                              _scrollToBottom();
-                                            });
-                                          },
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              color: CupertinoColors.activeBlue,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            width: 50,
-                                            height: 50,
-                                            child: const Center(
-                                              child: Icon(
-                                                CupertinoIcons.envelope_badge,
-                                                size: 30,
-                                                color: CupertinoColors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                )
                               ],
                             ),
                           ),
                           const SizedBox(
                             height: 8,
                           ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                  ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
                                   child: CupertinoButton.filled(
                                     onPressed: () =>
                                         _chatNavigator.showMessageOptionsDialog(
@@ -285,8 +271,50 @@ class _ChatPageState extends State<ChatPage> {
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                                BlocBuilder<
+                                    ChatNewMessagesButtonVisibilityCubit,
+                                    ChatNewMessagesButtonVisibilityState>(
+                                  bloc: _chatNewMessagesButtonVisibilityCubit,
+                                  builder: (context, state) {
+                                    return AnimatedSize(
+                                      curve: Curves.easeIn,
+                                      duration:
+                                          const Duration(milliseconds: 200),
+                                      reverseDuration: const Duration(
+                                        milliseconds: 200,
+                                      ),
+                                      child: Visibility(
+                                        visible: state.isVisible,
+                                        maintainSize: false,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 8,
+                                          ),
+                                          child: CupertinoButton(
+                                            padding: EdgeInsets.zero,
+                                            onPressed: () {
+                                              SchedulerBinding.instance
+                                                  .addPostFrameCallback(
+                                                      (timeStamp) {
+                                                _scrollToBottom();
+                                              });
+                                            },
+                                            child: const Center(
+                                              child: Icon(
+                                                CupertinoIcons.envelope_badge,
+                                                size: 30,
+                                                color:
+                                                    CupertinoColors.activeGreen,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: AppTheme.bottomPadding(context),

@@ -51,7 +51,7 @@ final class ChatListCubit extends Cubit<ChatListState> {
     );
   }
 
-  void _onEvent(PusherChannelsEventEntity pusherChannelsEventEntity) {
+  void _onEvent(PusherChannelsEventEntity pusherChannelsEventEntity) async {
     if (isClosed) {
       return;
     }

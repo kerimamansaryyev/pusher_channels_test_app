@@ -30,13 +30,23 @@ final class PusherChannelsConnectionCubit
       serviceLocator<PusherChannelsConnectionCubit>();
 
   void connect() {
-    _connectionStreamSubs?.cancel();
-    _connectionStreamSubs = null;
-
     _connectionStreamSubs = _listenForPusherChannelsClientConnection().listen(
       _onConnectionEvent,
     );
     _connectPusherChannelsClient();
+  }
+
+  void breakConnectionWithError(
+    dynamic exception,
+    StackTrace stackTrace,
+  ) {
+    _resetListeners();
+    _onConnectionEvent(
+      PusherChannelsConnectionFailed(
+        exception: exception,
+        stackTrace: stackTrace,
+      ),
+    );
   }
 
   @override
@@ -57,6 +67,11 @@ final class PusherChannelsConnectionCubit
         connectionResult: connectionResult,
       ),
     );
+  }
+
+  void _resetListeners() {
+    _connectionStreamSubs?.cancel();
+    _connectionStreamSubs = null;
   }
 }
 

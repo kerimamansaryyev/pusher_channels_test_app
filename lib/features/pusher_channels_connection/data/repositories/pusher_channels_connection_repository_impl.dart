@@ -4,22 +4,23 @@ import 'package:dart_pusher_channels/dart_pusher_channels.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pusher_channels_test_app/core/utils/either/either.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/data/constants/pusher_channels_connection_constants.dart';
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/data/factories/pusher_channels_client_factory.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/message_not_triggered_failure.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_connection_result.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart';
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/repositories/abstract_pusher_channels_connection_repository.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/repositories/pusher_channels_connection_repository.dart';
 
 @LazySingleton(
   as: PusherChannelsConnectionRepository,
 )
 final class PusherChannelsConnectionRepositoryImpl
-    implements PusherChannelsConnectionRepository {
+    extends AbstractPusherChannelsConnectionRepository {
+  final PusherChannelsClientFactory _pusherChannelsClientFactory;
   StreamSubscription? _clientConnectionStreamSubs;
   PusherChannelsClient? _pusherChannelsClient;
-  final StreamController<PusherChannelsConnectionResult>
-      _connectionStreamController = StreamController.broadcast();
 
-  PusherChannelsConnectionRepositoryImpl() {
+  PusherChannelsConnectionRepositoryImpl(this._pusherChannelsClientFactory) {
     resetToDefaults();
   }
 
@@ -81,7 +82,8 @@ final class PusherChannelsConnectionRepositoryImpl
     _pusherChannelsClient?.dispose();
     _clientConnectionStreamSubs = null;
     _pusherChannelsClient = null;
-    final client = _pusherChannelsClient = PusherChannelsClient.websocket(
+    final client =
+        _pusherChannelsClient = _pusherChannelsClientFactory.createClient(
       options: PusherChannelsConnectionConstants.pusherChannelsOptions,
       connectionErrorHandler: (exception, trace, _) =>
           _onConnectionError(exception, trace),
@@ -163,10 +165,6 @@ final class PusherChannelsConnectionRepositoryImpl
         const Stream.empty();
   }
 
-  @override
-  Stream<PusherChannelsConnectionResult> onConnectionChanged() =>
-      _connectionStreamController.stream;
-
   PresenceChannel? _createIfNotCreatedPresenceChannel(String channelName) {
     final presenceChannel = _pusherChannelsClient?.presenceChannel(
       channelName,
@@ -184,12 +182,12 @@ final class PusherChannelsConnectionRepositoryImpl
   ) {
     switch (lifeCycleState) {
       case PusherChannelsClientLifeCycleState.pendingConnection:
-        _connectionStreamController.add(
+        fireConnectionResultEvent(
           const PusherChannelsConnectionPending(),
         );
         return;
       case PusherChannelsClientLifeCycleState.establishedConnection:
-        _connectionStreamController.add(
+        fireConnectionResultEvent(
           const PusherChannelsConnectionSucceeded(),
         );
       default:
@@ -201,20 +199,5 @@ final class PusherChannelsConnectionRepositoryImpl
     dynamic exception,
     StackTrace trace,
   ) =>
-      _safelyAddConnectionResultToController(
-        PusherChannelsConnectionFailed(
-          exception: exception,
-          stackTrace: trace,
-        ),
-      );
-
-  void _safelyAddConnectionResultToController(
-    PusherChannelsConnectionResult event,
-  ) {
-    if (!_connectionStreamController.isClosed) {
-      _connectionStreamController.add(
-        event,
-      );
-    }
-  }
+      fireConnectionErrorEvent(exception, trace);
 }

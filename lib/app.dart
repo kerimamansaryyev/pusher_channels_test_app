@@ -2,7 +2,7 @@ import 'package:adaptix/adaptix.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pusher_channels_test_app/core/utils/theme/app_theme.dart';
-import 'package:pusher_channels_test_app/features/home/presentation/pages/home/home_page.dart';
+import 'package:pusher_channels_test_app/features/home/presentation/pages/home_page/home_page.dart';
 import 'package:pusher_channels_test_app/features/settings/domain/stores/settings_store.dart';
 import 'package:pusher_channels_test_app/localization/localization_override.dart';
 import 'package:pusher_channels_test_app/localization/localization_service.dart';

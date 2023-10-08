@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pusher_channels_test_app/di/injection_container.dart';
-import 'package:pusher_channels_test_app/features/chat/presentation/pages/chat/chat_page.dart';
+import 'package:pusher_channels_test_app/features/chat/presentation/pages/chat_page/chat_page.dart';
 import 'package:pusher_channels_test_app/navigation/app_navigator.dart';
 import 'package:pusher_channels_test_app/navigation/basic_alert_route_mixin.dart';
 import 'package:pusher_channels_test_app/navigation/per_page_navigator_mixin.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pusher_channels_test_app/di/injection_container.dart';
-import 'package:pusher_channels_test_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:pusher_channels_test_app/features/settings/presentation/pages/settings_page/settings_page.dart';
 import 'package:pusher_channels_test_app/localization/localization_service.dart';
 import 'package:pusher_channels_test_app/navigation/app_navigator.dart';
 import 'package:pusher_channels_test_app/navigation/per_page_navigator_mixin.dart';

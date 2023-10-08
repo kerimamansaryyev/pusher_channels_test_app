@@ -3,11 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pusher_channels_test_app/core/utils/theme/app_theme.dart';
-import 'package:pusher_channels_test_app/core/utils/theme/app_typography.dart';
 import 'package:pusher_channels_test_app/features/chat/presentation/blocs/chat_list_cubit.dart';
 import 'package:pusher_channels_test_app/features/chat/presentation/blocs/chat_message_trigger_cubit.dart';
 import 'package:pusher_channels_test_app/features/chat/presentation/blocs/chat_new_messages_button_visibility.dart';
 import 'package:pusher_channels_test_app/features/chat/presentation/chat_navigator.dart';
+import 'package:pusher_channels_test_app/features/chat/presentation/widgets/chat_event_notification_widget.dart';
+import 'package:pusher_channels_test_app/features/chat/presentation/widgets/chat_message_bubble.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/message_not_triggered_failure.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_connection_result.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart';
@@ -205,11 +206,11 @@ class _ChatPageState extends State<ChatPage> {
                                                 PusherChannelsChatBeganEventEntity() ||
                                                 PusherChannelsUserJoinedEventEntity() ||
                                                 PusherChannelsUserLeftEventEntity() =>
-                                                  _EventNotification(
+                                                  ChatEventNotificationWidget(
                                                     eventEntity: eventEntity,
                                                   ),
                                                 PusherChannelsUserMessageEventEntity() =>
-                                                  _MessageBubble(
+                                                  ChatMessageBubble(
                                                     eventEntity: eventEntity,
                                                   ),
                                               },
@@ -327,122 +328,6 @@ class _ChatPageState extends State<ChatPage> {
           );
         },
       ),
-    );
-  }
-}
-
-class _MessageBubble extends StatelessWidget {
-  final PusherChannelsUserMessageEventEntity eventEntity;
-
-  const _MessageBubble({
-    required this.eventEntity,
-    Key? key,
-  }) : super(
-          key: key,
-        );
-
-  @override
-  Widget build(BuildContext context) {
-    final userId = eventEntity.userId;
-
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width,
-      ),
-      child: Row(
-        mainAxisAlignment: eventEntity.isMyMessage
-            ? MainAxisAlignment.end
-            : MainAxisAlignment.start,
-        children: [
-          Flexible(
-            child: Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: eventEntity.isMyMessage
-                        ? CupertinoColors.activeBlue
-                        : CupertinoColors.activeGreen,
-                    borderRadius: BorderRadius.circular(
-                      8,
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(
-                    12,
-                  ),
-                  child: Text(
-                    eventEntity.messageContent,
-                    style: AppTypographies.b2.style(context).copyWith(
-                          color: CupertinoColors.label.darkColor,
-                        ),
-                  ),
-                ),
-                if (userId != null) ...[
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  Text(
-                    context.translation.messageOfUser(userId),
-                    style: AppTypographies.b4.style(context).copyWith(
-                          color: CupertinoDynamicColor.resolve(
-                            CupertinoColors.secondaryLabel,
-                            context,
-                          ),
-                        ),
-                  ),
-                ]
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EventNotification extends StatelessWidget {
-  final PusherChannelsEventEntity eventEntity;
-
-  const _EventNotification({
-    required this.eventEntity,
-    Key? key,
-  }) : super(
-          key: key,
-        );
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Center(
-            child: Text(
-              switch (eventEntity) {
-                PusherChannelsChatBeganEventEntity(
-                  myUserId: final myUserId,
-                ) =>
-                  context.translation.chatBegan(
-                    myUserId.toString(),
-                  ),
-                PusherChannelsUserJoinedEventEntity(userId: final userId) =>
-                  context.translation.userJoined(
-                    userId.toString(),
-                  ),
-                PusherChannelsUserLeftEventEntity(userId: final userId) =>
-                  context.translation.userLeft(
-                    userId.toString(),
-                  ),
-                _ => '',
-              },
-              style: AppTypographies.b3.style(context).copyWith(
-                    color: CupertinoDynamicColor.resolve(
-                      CupertinoColors.secondaryLabel,
-                      context,
-                    ),
-                  ),
-            ),
-          ),
-        )
-      ],
     );
   }
 }

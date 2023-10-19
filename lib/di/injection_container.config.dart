@@ -13,7 +13,7 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 import 'package:shared_preferences/shared_preferences.dart' as _i13;
 
-import '../core/di/injection_module.dart' as _i28;
+import '../core/di/injection_module.dart' as _i30;
 import '../features/chat/domain/use-cases/reset_presence_channel_state.dart'
     as _i10;
 import '../features/chat/domain/use-cases/subscribe_and_listen_to_presence_channel_events.dart'
@@ -26,6 +26,10 @@ import '../features/chat/presentation/blocs/chat_message_trigger_cubit.dart'
 import '../features/chat/presentation/blocs/chat_new_messages_button_visibility.dart'
     as _i5;
 import '../features/chat/presentation/chat_navigator.dart' as _i4;
+import '../features/chat/presentation/pages/chat_page/chat_page_model.dart'
+    as _i24;
+import '../features/chat/presentation/pages/chat_page/chat_page_presenter.dart'
+    as _i25;
 import '../features/home/presentation/home_navigator.dart' as _i6;
 import '../features/pusher_channels_connection/data/factories/pusher_channels_client_factory.dart'
     as _i7;
@@ -46,10 +50,10 @@ import '../features/settings/data/repositories/settings_repository_impl.dart'
 import '../features/settings/data/storages/settings_preferences.dart' as _i21;
 import '../features/settings/domain/repositories/settings_repository.dart'
     as _i22;
-import '../features/settings/domain/stores/settings_store.dart' as _i27;
-import '../features/settings/domain/usecases/get_settings_records.dart' as _i24;
-import '../features/settings/domain/usecases/save_locale.dart' as _i25;
-import '../features/settings/domain/usecases/save_theme.dart' as _i26;
+import '../features/settings/domain/stores/settings_store.dart' as _i29;
+import '../features/settings/domain/usecases/get_settings_records.dart' as _i26;
+import '../features/settings/domain/usecases/save_locale.dart' as _i27;
+import '../features/settings/domain/usecases/save_theme.dart' as _i28;
 import '../features/settings/presentation/settings_navigator.dart' as _i12;
 import '../navigation/app_navigator.dart' as _i3;
 
@@ -119,21 +123,30 @@ Future<_i1.GetIt> $initGetIt(
       () => _i21.SettingsPreferencesImpl(gh<_i13.SharedPreferences>()));
   gh.factory<_i22.SettingsRepository>(
       () => _i23.SettingsRepositoryImpl(gh<_i21.SettingsPreferences>()));
-  gh.factory<_i24.GetSettingsRecords>(
-      () => _i24.GetSettingsRecords(gh<_i22.SettingsRepository>()));
-  gh.factory<_i25.SaveLocale>(
-      () => _i25.SaveLocale(gh<_i22.SettingsRepository>()));
-  gh.factory<_i26.SaveTheme>(
-      () => _i26.SaveTheme(gh<_i22.SettingsRepository>()));
-  await gh.singletonAsync<_i27.SettingsStoreCubit>(
-    () => _i27.SettingsStoreCubit.internal(
-      gh<_i24.GetSettingsRecords>(),
-      gh<_i25.SaveLocale>(),
-      gh<_i26.SaveTheme>(),
+  gh.factory<_i24.ChatPageModel>(() => _i24.ChatPageModel(
+        chatNewMessagesButtonVisibilityCubit:
+            gh<_i5.ChatNewMessagesButtonVisibilityCubit>(),
+        pusherChannelsConnectionCubit: gh<_i20.PusherChannelsConnectionCubit>(),
+        chatListCubit: gh<_i16.ChatListCubit>(),
+        chatMessageTriggerCubit: gh<_i17.ChatMessageTriggerCubit>(),
+      ));
+  gh.factory<_i25.ChatPagePresenter>(
+      () => _i25.ChatPagePresenter(gh<_i24.ChatPageModel>()));
+  gh.factory<_i26.GetSettingsRecords>(
+      () => _i26.GetSettingsRecords(gh<_i22.SettingsRepository>()));
+  gh.factory<_i27.SaveLocale>(
+      () => _i27.SaveLocale(gh<_i22.SettingsRepository>()));
+  gh.factory<_i28.SaveTheme>(
+      () => _i28.SaveTheme(gh<_i22.SettingsRepository>()));
+  await gh.singletonAsync<_i29.SettingsStoreCubit>(
+    () => _i29.SettingsStoreCubit.internal(
+      gh<_i26.GetSettingsRecords>(),
+      gh<_i27.SaveLocale>(),
+      gh<_i28.SaveTheme>(),
     ),
     preResolve: true,
   );
   return getIt;
 }
 
-class _$InjectionModule extends _i28.InjectionModule {}
+class _$InjectionModule extends _i30.InjectionModule {}

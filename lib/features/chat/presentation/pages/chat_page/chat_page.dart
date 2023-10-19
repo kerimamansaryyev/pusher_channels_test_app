@@ -1,17 +1,15 @@
-import 'dart:async';
-
 import 'package:adaptix/adaptix.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pusher_channels_test_app/core/utils/theme/app_theme.dart';
 import 'package:pusher_channels_test_app/features/chat/presentation/blocs/chat_list_cubit.dart';
-import 'package:pusher_channels_test_app/features/chat/presentation/blocs/chat_message_trigger_cubit.dart';
 import 'package:pusher_channels_test_app/features/chat/presentation/blocs/chat_new_messages_button_visibility.dart';
 import 'package:pusher_channels_test_app/features/chat/presentation/chat_navigator.dart';
+import 'package:pusher_channels_test_app/features/chat/presentation/pages/chat_page/chat_page_presenter.dart';
+import 'package:pusher_channels_test_app/features/chat/presentation/pages/chat_page/chat_page_view.dart';
 import 'package:pusher_channels_test_app/features/chat/presentation/widgets/chat_event_notification_widget.dart';
 import 'package:pusher_channels_test_app/features/chat/presentation/widgets/chat_message_bubble.dart';
-import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/message_not_triggered_failure.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_connection_result.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/presentation/blocs/pusher_channels_connection_cubit.dart';
@@ -24,28 +22,16 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
-  bool _isScrollingToBottom = false;
-
-  static const _subsWaitingTimeoutDuration = Duration(
-    seconds: 5,
-  );
-
-  final ChatNewMessagesButtonVisibilityCubit
-      _chatNewMessagesButtonVisibilityCubit =
-      ChatNewMessagesButtonVisibilityCubit.fromEnvironment();
-
+class _ChatPageState extends State<ChatPage> implements ChatPageView {
   final ScrollController _scrollController = ScrollController();
-  final PusherChannelsConnectionCubit _pusherChannelsConnectionCubit =
-      PusherChannelsConnectionCubit.fromEnvironment();
-  final ChatListCubit _chatListCubit = ChatListCubit.fromEnvironment();
-  final ChatMessageTriggerCubit _chatMessageTriggerCubit =
-      ChatMessageTriggerCubit.fromEnvironment();
+  bool _isScrollingToBottom = false;
   final ChatNavigator _chatNavigator = ChatNavigator.fromEnvironment();
+  late final ChatPagePresenter _presenter = ChatPagePresenter.fromEnvironment()
+    ..bindView(this);
 
   @override
   void initState() {
-    _pusherChannelsConnectionCubit.connect();
+    _presenter.installConnection();
     _scrollController.addListener(_scrollListener);
     super.initState();
   }
@@ -55,89 +41,53 @@ class _ChatPageState extends State<ChatPage> {
         _scrollController.offset;
   }
 
-  void _scrollToBottom() async {
-    setState(() {
-      _isScrollingToBottom = true;
+  void _scrollToBottom() {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      setState(() {
+        _isScrollingToBottom = true;
+      });
+
+      await _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent + 10000,
+        duration: const Duration(
+          seconds: 1,
+        ),
+        curve: Curves.ease,
+      );
+      setState(() {
+        _isScrollingToBottom = false;
+      });
     });
-
-    await _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent + 10000,
-      duration: const Duration(
-        seconds: 1,
-      ),
-      curve: Curves.ease,
-    );
-    setState(() {
-      _isScrollingToBottom = false;
-    });
   }
 
-  void _onConnectionChanged(PusherChannelsConnectionState connectionState) {
-    if (connectionState.connectionResult
-        case PusherChannelsConnectionSucceeded()) {
-      _chatListCubit.startListening();
-      _checkIfWaitingLongForSubscription();
-    } else if (connectionState.connectionResult
-        case PusherChannelsConnectionPending()) {
-      _chatListCubit.resetToWaitingForSubscription();
-    }
-  }
-
-  void _triggerMessage(String message) =>
-      _chatMessageTriggerCubit.triggerClientEvent(
-        message: message,
-      );
-
-  void _whenGotNewMessages(ChatListState chatListState) {
-    chatListState.when(
-      succeeded: (messages) {
-        if (messages.isEmpty) {
-          return;
-        }
-        final newestMessage = messages.last;
-
-        if (newestMessage is! PusherChannelsUserMessageEventEntity ||
-            newestMessage.isMyMessage) {
-          return;
-        }
-
-        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-          if (_currentScrollOffsetDifference > 15) {
-            _chatNewMessagesButtonVisibilityCubit.setVisible();
-          }
-        });
-      },
-      waitingForSubscription: () => null,
-    );
-  }
-
-  void _checkIfWaitingLongForSubscription() async {
-    try {
-      await Future.delayed(_subsWaitingTimeoutDuration);
-      _chatListCubit.state.when(
-        succeeded: (_) {
-          return;
-        },
-        waitingForSubscription: () => throw TimeoutException(null),
-      );
-    } on TimeoutException catch (exception, stackTrace) {
-      _pusherChannelsConnectionCubit.breakConnectionWithError(
-        exception,
-        stackTrace,
-      );
-    }
-  }
+  void _triggerMessage(String message) => _presenter.triggerMessage(message);
 
   void _scrollListener() {
     if (_currentScrollOffsetDifference < 5) {
-      _chatNewMessagesButtonVisibilityCubit.setInvisible();
+      _presenter.setButtonInvisible();
     }
   }
 
   @override
+  bool get canShowButton => _currentScrollOffsetDifference > 15;
+
+  @override
+  void scrollToBottom() => _scrollToBottom();
+
+  @override
+  void showMessageNotTriggeredError({
+    required String title,
+    required String description,
+  }) =>
+      _chatNavigator.showBasicAlert(
+        context,
+        title: title,
+        description: description,
+      );
+
+  @override
   void dispose() {
-    _pusherChannelsConnectionCubit.close();
-    _chatListCubit.close();
+    _presenter.dispose();
     super.dispose();
   }
 
@@ -156,46 +106,14 @@ class _ChatPageState extends State<ChatPage> {
       ),
       child: Builder(
         builder: (context) {
-          return MultiBlocListener(
-            listeners: [
-              BlocListener<ChatListCubit, ChatListState>(
-                bloc: _chatListCubit,
-                listener: (context, state) => _whenGotNewMessages(state),
-              ),
-              BlocListener<ChatMessageTriggerCubit, ChatMessageTriggerState>(
-                bloc: _chatMessageTriggerCubit,
-                listener: (context, state) => state.whenOrNull(
-                  triggered: (message) {
-                    _chatListCubit.pushOwnMessage(message);
-                    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-                      _scrollToBottom();
-                    });
-                  },
-                  failed: (failure) {
-                    if (failure case MessageNotTriggeredFailure()) {
-                      _chatNavigator.showBasicAlert(
-                        context,
-                        title: context.translation.error,
-                        description: context.translation.messageNotTriggered,
-                      );
-                    }
-                  },
-                ),
-              ),
-              BlocListener<PusherChannelsConnectionCubit,
-                  PusherChannelsConnectionState>(
-                bloc: _pusherChannelsConnectionCubit,
-                listener: (context, state) => _onConnectionChanged(
-                  state,
-                ),
-              ),
-            ],
-            child: BlocBuilder<PusherChannelsConnectionCubit,
+          return _presenter.buildMultiBlocListener(
+            context,
+            BlocBuilder<BlocBase<PusherChannelsConnectionState>,
                 PusherChannelsConnectionState>(
-              bloc: _pusherChannelsConnectionCubit,
+              bloc: _presenter.pusherChannelsConnectionCubit,
               builder: (context, connectionState) =>
-                  BlocBuilder<ChatListCubit, ChatListState>(
-                bloc: _chatListCubit,
+                  BlocBuilder<BlocBase<ChatListState>, ChatListState>(
+                bloc: _presenter.chatListCubit,
                 builder: (context, chatListState) =>
                     switch (connectionState.connectionResult) {
                   PusherChannelsConnectionSucceeded() => chatListState.when(
@@ -272,9 +190,11 @@ class _ChatPageState extends State<ChatPage> {
                                   ),
                                 ),
                                 BlocBuilder<
-                                    ChatNewMessagesButtonVisibilityCubit,
+                                    BlocBase<
+                                        ChatNewMessagesButtonVisibilityState>,
                                     ChatNewMessagesButtonVisibilityState>(
-                                  bloc: _chatNewMessagesButtonVisibilityCubit,
+                                  bloc: _presenter
+                                      .chatNewMessagesButtonVisibilityCubit,
                                   builder: (context, state) {
                                     return AnimatedSize(
                                       curve: Curves.easeIn,
@@ -339,8 +259,7 @@ class _ChatPageState extends State<ChatPage> {
                           ),
                           Center(
                             child: CupertinoButton(
-                              onPressed: () =>
-                                  _pusherChannelsConnectionCubit.connect(),
+                              onPressed: () => _presenter.installConnection(),
                               child: Icon(
                                 CupertinoIcons.refresh,
                                 size: 36.adaptedPx(context),

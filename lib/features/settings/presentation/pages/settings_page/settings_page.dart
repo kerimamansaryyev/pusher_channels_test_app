@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pusher_channels_test_app/core/ui/section_button.dart';
 import 'package:pusher_channels_test_app/core/utils/theme/app_theme.dart';
 import 'package:pusher_channels_test_app/features/settings/domain/stores/settings_store.dart';
+import 'package:pusher_channels_test_app/features/settings/presentation/pages/settings_page/settings_page_presenter.dart';
+import 'package:pusher_channels_test_app/features/settings/presentation/pages/settings_page/settings_page_view.dart';
 import 'package:pusher_channels_test_app/features/settings/presentation/settings_navigator.dart';
 import 'package:pusher_channels_test_app/localization/extensions.dart';
 
@@ -18,8 +20,16 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage>
+    implements SettingsPageView {
   final _settingsNavigator = SettingsNavigator.fromEnvironment();
+  final _presenter = SettingsPagePresenter.fromEnvironment();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _presenter.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +63,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     onPressed: () => _settingsNavigator.showLanguageDialog(
                       context,
                       onLanguageChosen: (newLocale) =>
-                          SettingsStoreCubit.fromEnvironment().chooseLanguage(
+                          _presenter.chooseLanguage(
                         newLocale,
                       ),
                     ),
                     title: context.translation.language,
                   ),
-                  BlocBuilder<SettingsStoreCubit, SettingsStoreState>(
-                    bloc: SettingsStoreCubit.fromEnvironment(),
+                  BlocBuilder<BlocBase<SettingsStoreState>, SettingsStoreState>(
+                    bloc: _presenter.readSettingsStoreCubit,
                     builder: (context, settingsStoreState) {
                       final state = settingsStoreState.theme;
                       final isDark =
@@ -69,15 +79,13 @@ class _SettingsPageState extends State<SettingsPage> {
                               Brightness.dark;
                       return SectionButton(
                         title: context.translation.theme,
-                        onPressed: () => SettingsStoreCubit.fromEnvironment()
-                            .toggleTheme(!isDark),
+                        onPressed: () => _presenter.toggleTheme(!isDark),
                         iconData: isDark
                             ? CupertinoIcons.moon_stars
                             : CupertinoIcons.sun_max,
                         trailing: CupertinoSwitch(
                           value: isDark,
-                          onChanged: (newValue) =>
-                              SettingsStoreCubit.fromEnvironment().toggleTheme(
+                          onChanged: (newValue) => _presenter.toggleTheme(
                             newValue,
                           ),
                         ),

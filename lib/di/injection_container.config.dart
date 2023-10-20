@@ -13,7 +13,7 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 import 'package:shared_preferences/shared_preferences.dart' as _i13;
 
-import '../core/di/injection_module.dart' as _i30;
+import '../core/di/injection_module.dart' as _i32;
 import '../features/chat/domain/use-cases/reset_presence_channel_state.dart'
     as _i10;
 import '../features/chat/domain/use-cases/subscribe_and_listen_to_presence_channel_events.dart'
@@ -54,6 +54,10 @@ import '../features/settings/domain/stores/settings_store.dart' as _i29;
 import '../features/settings/domain/usecases/get_settings_records.dart' as _i26;
 import '../features/settings/domain/usecases/save_locale.dart' as _i27;
 import '../features/settings/domain/usecases/save_theme.dart' as _i28;
+import '../features/settings/presentation/pages/settings_page/settings_page_model.dart'
+    as _i30;
+import '../features/settings/presentation/pages/settings_page/settings_page_presenter.dart'
+    as _i31;
 import '../features/settings/presentation/settings_navigator.dart' as _i12;
 import '../navigation/app_navigator.dart' as _i3;
 
@@ -124,11 +128,10 @@ Future<_i1.GetIt> $initGetIt(
   gh.factory<_i22.SettingsRepository>(
       () => _i23.SettingsRepositoryImpl(gh<_i21.SettingsPreferences>()));
   gh.factory<_i24.ChatPageModel>(() => _i24.ChatPageModel(
-        chatNewMessagesButtonVisibilityCubit:
-            gh<_i5.ChatNewMessagesButtonVisibilityCubit>(),
-        pusherChannelsConnectionCubit: gh<_i20.PusherChannelsConnectionCubit>(),
-        chatListCubit: gh<_i16.ChatListCubit>(),
-        chatMessageTriggerCubit: gh<_i17.ChatMessageTriggerCubit>(),
+        gh<_i5.ChatNewMessagesButtonVisibilityCubit>(),
+        gh<_i20.PusherChannelsConnectionCubit>(),
+        gh<_i16.ChatListCubit>(),
+        gh<_i17.ChatMessageTriggerCubit>(),
       ));
   gh.factory<_i25.ChatPagePresenter>(
       () => _i25.ChatPagePresenter(gh<_i24.ChatPageModel>()));
@@ -146,7 +149,11 @@ Future<_i1.GetIt> $initGetIt(
     ),
     preResolve: true,
   );
+  gh.factory<_i30.SettingsPageModel>(
+      () => _i30.SettingsPageModel(gh<_i29.SettingsStoreCubit>()));
+  gh.factory<_i31.SettingsPagePresenter>(
+      () => _i31.SettingsPagePresenter(gh<_i30.SettingsPageModel>()));
   return getIt;
 }
 
-class _$InjectionModule extends _i30.InjectionModule {}
+class _$InjectionModule extends _i32.InjectionModule {}

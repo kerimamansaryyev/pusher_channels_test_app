@@ -34,16 +34,17 @@ final class ChatPagePresenter
   factory ChatPagePresenter.fromEnvironment() =>
       serviceLocator<ChatPagePresenter>();
 
-  BlocBase<PusherChannelsConnectionState> get pusherChannelsConnectionCubit =>
-      model.pusherChannelsConnectionCubit;
+  BlocBase<PusherChannelsConnectionState>
+      get readPusherChannelsConnectionCubit =>
+          model.pusherChannelsConnectionCubit;
 
-  BlocBase<ChatListState> get chatListCubit => model.chatListCubit;
+  BlocBase<ChatListState> get readChatListCubit => model.chatListCubit;
 
-  BlocBase<ChatMessageTriggerState> get chatMessageTriggerCubit =>
+  BlocBase<ChatMessageTriggerState> get readChatMessageTriggerCubit =>
       model.chatMessageTriggerCubit;
 
   BlocBase<ChatNewMessagesButtonVisibilityState>
-      get chatNewMessagesButtonVisibilityCubit =>
+      get readChatNewMessagesButtonVisibilityCubit =>
           model.chatNewMessagesButtonVisibilityCubit;
 
   void installConnection() {
@@ -62,6 +63,7 @@ final class ChatPagePresenter
 
   @override
   void dispose() {
+    super.dispose();
     model.pusherChannelsConnectionCubit.close();
     model.chatListCubit.close();
   }

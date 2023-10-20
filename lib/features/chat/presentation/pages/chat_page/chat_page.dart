@@ -110,10 +110,10 @@ class _ChatPageState extends State<ChatPage> implements ChatPageView {
             context,
             BlocBuilder<BlocBase<PusherChannelsConnectionState>,
                 PusherChannelsConnectionState>(
-              bloc: _presenter.pusherChannelsConnectionCubit,
+              bloc: _presenter.readPusherChannelsConnectionCubit,
               builder: (context, connectionState) =>
                   BlocBuilder<BlocBase<ChatListState>, ChatListState>(
-                bloc: _presenter.chatListCubit,
+                bloc: _presenter.readChatListCubit,
                 builder: (context, chatListState) =>
                     switch (connectionState.connectionResult) {
                   PusherChannelsConnectionSucceeded() => chatListState.when(
@@ -194,7 +194,7 @@ class _ChatPageState extends State<ChatPage> implements ChatPageView {
                                         ChatNewMessagesButtonVisibilityState>,
                                     ChatNewMessagesButtonVisibilityState>(
                                   bloc: _presenter
-                                      .chatNewMessagesButtonVisibilityCubit,
+                                      .readChatNewMessagesButtonVisibilityCubit,
                                   builder: (context, state) {
                                     return AnimatedSize(
                                       curve: Curves.easeIn,

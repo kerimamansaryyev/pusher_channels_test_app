@@ -14,10 +14,10 @@ final class ChatPageModel implements AppModel {
   final ChatListCubit chatListCubit;
   final ChatMessageTriggerCubit chatMessageTriggerCubit;
 
-  ChatPageModel({
-    required this.chatNewMessagesButtonVisibilityCubit,
-    required this.pusherChannelsConnectionCubit,
-    required this.chatListCubit,
-    required this.chatMessageTriggerCubit,
-  });
+  ChatPageModel(
+    this.chatNewMessagesButtonVisibilityCubit,
+    this.pusherChannelsConnectionCubit,
+    this.chatListCubit,
+    this.chatMessageTriggerCubit,
+  );
 }

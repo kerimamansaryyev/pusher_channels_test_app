@@ -11,6 +11,7 @@ abstract class AppPresenter<V extends AppView, M extends AppModel> {
   @protected
   V? get view => _view;
 
+  @mustCallSuper
   void bindView(V view) {
     this._view = view;
   }

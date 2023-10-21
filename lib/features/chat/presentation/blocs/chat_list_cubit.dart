@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pusher_channels_test_app/di/injection_container.dart';
-import 'package:pusher_channels_test_app/features/chat/domain/use-cases/reset_presence_channel_state.dart';
+import 'package:pusher_channels_test_app/features/chat/domain/usecases/reset_presence_channel_state.dart';
+import 'package:pusher_channels_test_app/features/chat/domain/usecases/subscribe_and_listen_to_presence_channel_events.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart';
-import 'package:pusher_channels_test_app/features/chat/domain/use-cases/subscribe_and_listen_to_presence_channel_events.dart';
 
 @injectable
 final class ChatListCubit extends Cubit<ChatListState> {

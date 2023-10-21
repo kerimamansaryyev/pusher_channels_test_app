@@ -14,11 +14,11 @@ import 'package:injectable/injectable.dart' as _i2;
 import 'package:shared_preferences/shared_preferences.dart' as _i13;
 
 import '../core/di/injection_module.dart' as _i32;
-import '../features/chat/domain/use-cases/reset_presence_channel_state.dart'
+import '../features/chat/domain/usecases/reset_presence_channel_state.dart'
     as _i10;
-import '../features/chat/domain/use-cases/subscribe_and_listen_to_presence_channel_events.dart'
+import '../features/chat/domain/usecases/subscribe_and_listen_to_presence_channel_events.dart'
     as _i14;
-import '../features/chat/domain/use-cases/trigger_client_event_on_presence_channel.dart'
+import '../features/chat/domain/usecases/trigger_client_event_on_presence_channel.dart'
     as _i15;
 import '../features/chat/presentation/blocs/chat_list_cubit.dart' as _i16;
 import '../features/chat/presentation/blocs/chat_message_trigger_cubit.dart'

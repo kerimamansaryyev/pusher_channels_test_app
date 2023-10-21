@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:pusher_channels_test_app/core/domain/failure.dart';
 import 'package:pusher_channels_test_app/core/utils/either/either.dart';
 import 'package:pusher_channels_test_app/di/injection_container.dart';
-import 'package:pusher_channels_test_app/features/chat/domain/use-cases/trigger_client_event_on_presence_channel.dart';
+import 'package:pusher_channels_test_app/features/chat/domain/usecases/trigger_client_event_on_presence_channel.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart';
 
 @injectable

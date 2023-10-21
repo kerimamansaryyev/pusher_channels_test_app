@@ -66,6 +66,8 @@ final class ChatPagePresenter
     super.dispose();
     model.pusherChannelsConnectionCubit.close();
     model.chatListCubit.close();
+    model.chatMessageTriggerCubit.close();
+    model.chatNewMessagesButtonVisibilityCubit.close();
   }
 
   @override

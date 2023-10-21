@@ -82,6 +82,14 @@ final class SettingsStoreState {
     required this.theme,
   });
 
+  @override
+  int get hashCode => Object.hashAllUnordered(
+        [
+          locale,
+          theme,
+        ],
+      );
+
   SettingsStoreState copyWith({
     Locale? locale,
     AppTheme? theme,
@@ -91,4 +99,11 @@ final class SettingsStoreState {
       theme: theme ?? this.theme,
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is SettingsStoreState &&
+      runtimeType == other.runtimeType &&
+      locale == other.locale &&
+      theme == other.theme;
 }

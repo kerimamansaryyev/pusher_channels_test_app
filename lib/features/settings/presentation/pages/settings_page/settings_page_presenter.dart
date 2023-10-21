@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pusher_channels_test_app/core/utils/mvp/app_presenter.dart';
 import 'package:pusher_channels_test_app/di/injection_container.dart';
-import 'package:pusher_channels_test_app/features/settings/domain/stores/settings_store.dart';
+import 'package:pusher_channels_test_app/features/settings/domain/stores/settings_store_cubit.dart';
 import 'package:pusher_channels_test_app/features/settings/presentation/pages/settings_page/settings_page_model.dart';
 import 'package:pusher_channels_test_app/features/settings/presentation/pages/settings_page/settings_page_view.dart';
 

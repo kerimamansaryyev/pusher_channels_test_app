@@ -11,7 +11,7 @@ typedef SettingsRecord = (AppTheme?, Locale? locale);
 /// Possible Failures:
 /// - [UnknownFailure]
 @injectable
-final class GetSettingsRecords {
+class GetSettingsRecords {
   final SettingsRepository _settingsRepository;
 
   const GetSettingsRecords(this._settingsRepository);

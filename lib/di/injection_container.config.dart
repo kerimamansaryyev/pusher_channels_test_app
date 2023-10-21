@@ -50,7 +50,7 @@ import '../features/settings/data/repositories/settings_repository_impl.dart'
 import '../features/settings/data/storages/settings_preferences.dart' as _i21;
 import '../features/settings/domain/repositories/settings_repository.dart'
     as _i22;
-import '../features/settings/domain/stores/settings_store.dart' as _i29;
+import '../features/settings/domain/stores/settings_store_cubit.dart' as _i29;
 import '../features/settings/domain/usecases/get_settings_records.dart' as _i26;
 import '../features/settings/domain/usecases/save_locale.dart' as _i27;
 import '../features/settings/domain/usecases/save_theme.dart' as _i28;

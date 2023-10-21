@@ -4,13 +4,22 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
+import 'dart:ui' as _i11;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:pusher_channels_test_app/core/domain/failure.dart' as _i5;
 import 'package:pusher_channels_test_app/core/utils/either/either.dart' as _i4;
+import 'package:pusher_channels_test_app/core/utils/theme/app_theme.dart'
+    as _i10;
 import 'package:pusher_channels_test_app/features/settings/domain/repositories/settings_repository.dart'
     as _i2;
+import 'package:pusher_channels_test_app/features/settings/domain/usecases/get_settings_records.dart'
+    as _i9;
+import 'package:pusher_channels_test_app/features/settings/domain/usecases/save_locale.dart'
+    as _i7;
+import 'package:pusher_channels_test_app/features/settings/domain/usecases/save_theme.dart'
+    as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -135,4 +144,111 @@ class MockSettingsRepository extends _i1.Mock
           ),
         )),
       ) as _i3.Future<_i4.Either<_i5.Failure<Exception>, void>>);
+}
+
+/// A class which mocks [SaveLocale].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSaveLocale extends _i1.Mock implements _i7.SaveLocale {
+  @override
+  _i3.Future<_i4.Either<_i5.Failure<Exception>, void>> call(
+          {required String? localeCode}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+          {#localeCode: localeCode},
+        ),
+        returnValue: _i3.Future<_i4.Either<_i5.Failure<Exception>, void>>.value(
+            _i6.dummyValue<_i4.Either<_i5.Failure<Exception>, void>>(
+          this,
+          Invocation.method(
+            #call,
+            [],
+            {#localeCode: localeCode},
+          ),
+        )),
+        returnValueForMissingStub:
+            _i3.Future<_i4.Either<_i5.Failure<Exception>, void>>.value(
+                _i6.dummyValue<_i4.Either<_i5.Failure<Exception>, void>>(
+          this,
+          Invocation.method(
+            #call,
+            [],
+            {#localeCode: localeCode},
+          ),
+        )),
+      ) as _i3.Future<_i4.Either<_i5.Failure<Exception>, void>>);
+}
+
+/// A class which mocks [SaveTheme].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSaveTheme extends _i1.Mock implements _i8.SaveTheme {
+  @override
+  _i3.Future<_i4.Either<_i5.Failure<Exception>, void>> call(
+          {required String? themeName}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+          {#themeName: themeName},
+        ),
+        returnValue: _i3.Future<_i4.Either<_i5.Failure<Exception>, void>>.value(
+            _i6.dummyValue<_i4.Either<_i5.Failure<Exception>, void>>(
+          this,
+          Invocation.method(
+            #call,
+            [],
+            {#themeName: themeName},
+          ),
+        )),
+        returnValueForMissingStub:
+            _i3.Future<_i4.Either<_i5.Failure<Exception>, void>>.value(
+                _i6.dummyValue<_i4.Either<_i5.Failure<Exception>, void>>(
+          this,
+          Invocation.method(
+            #call,
+            [],
+            {#themeName: themeName},
+          ),
+        )),
+      ) as _i3.Future<_i4.Either<_i5.Failure<Exception>, void>>);
+}
+
+/// A class which mocks [GetSettingsRecords].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetSettingsRecords extends _i1.Mock
+    implements _i9.GetSettingsRecords {
+  @override
+  _i3.Future<
+      _i4.Either<_i5.Failure<Exception>,
+          (_i10.AppTheme?, _i11.Locale?)>> call() => (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+        ),
+        returnValue: _i3.Future<
+            _i4.Either<_i5.Failure<Exception>,
+                (_i10.AppTheme?, _i11.Locale?)>>.value(_i6.dummyValue<
+            _i4.Either<_i5.Failure<Exception>, (_i10.AppTheme?, _i11.Locale?)>>(
+          this,
+          Invocation.method(
+            #call,
+            [],
+          ),
+        )),
+        returnValueForMissingStub: _i3.Future<
+            _i4.Either<_i5.Failure<Exception>,
+                (_i10.AppTheme?, _i11.Locale?)>>.value(_i6.dummyValue<
+            _i4.Either<_i5.Failure<Exception>, (_i10.AppTheme?, _i11.Locale?)>>(
+          this,
+          Invocation.method(
+            #call,
+            [],
+          ),
+        )),
+      ) as _i3.Future<
+          _i4.Either<_i5.Failure<Exception>, (_i10.AppTheme?, _i11.Locale?)>>);
 }

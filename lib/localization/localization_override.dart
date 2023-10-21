@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pusher_channels_test_app/features/settings/domain/stores/settings_store.dart';
+import 'package:pusher_channels_test_app/features/settings/domain/stores/settings_store_cubit.dart';
 import 'package:pusher_channels_test_app/localization/localization_service.dart';
 
 class LocalizationOverride extends StatelessWidget {

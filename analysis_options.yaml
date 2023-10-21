@@ -45,7 +45,6 @@ dart_code_metrics:
     maximum-nesting-level: 5
     number-of-methods: 10
     number-of-parameters: 20
-    source-lines-of-code: 120
     maintainability-index: 50
   rules:
     - avoid-collection-methods-with-unrelated-types

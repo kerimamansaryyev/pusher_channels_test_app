@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pusher_channels_test_app/core/ui/section_button.dart';
 import 'package:pusher_channels_test_app/core/utils/theme/app_theme.dart';
-import 'package:pusher_channels_test_app/features/settings/domain/stores/settings_store.dart';
+import 'package:pusher_channels_test_app/features/settings/domain/stores/settings_store_cubit.dart';
 import 'package:pusher_channels_test_app/features/settings/presentation/pages/settings_page/settings_page_presenter.dart';
 import 'package:pusher_channels_test_app/features/settings/presentation/pages/settings_page/settings_page_view.dart';
 import 'package:pusher_channels_test_app/features/settings/presentation/settings_navigator.dart';

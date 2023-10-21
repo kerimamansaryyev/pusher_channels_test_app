@@ -8,14 +8,14 @@ import 'package:pusher_channels_test_app/features/pusher_channels_connection/dat
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/message_not_triggered_failure.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_connection_result.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart';
-import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/repositories/abstract_pusher_channels_connection_repository.dart';
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/repositories/pusher_channels_connection_stream_controller_handler_mixin.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/repositories/pusher_channels_connection_repository.dart';
 
 @LazySingleton(
   as: PusherChannelsConnectionRepository,
 )
 final class PusherChannelsConnectionRepositoryImpl
-    extends AbstractPusherChannelsConnectionRepository {
+    with PusherChannelsConnectionStreamControllerHandlerMixin {
   final PusherChannelsClientFactory _pusherChannelsClientFactory;
   StreamSubscription? _clientConnectionStreamSubs;
   PusherChannelsClient? _pusherChannelsClient;

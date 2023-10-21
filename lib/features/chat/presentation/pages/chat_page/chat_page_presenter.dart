@@ -149,7 +149,7 @@ final class ChatPagePresenter
         }
 
         SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-          if (view?.canShowButton ?? false) {
+          if (view?.canShowNewMessagesButton ?? false) {
             model.chatNewMessagesButtonVisibilityCubit.setVisible();
           }
         });

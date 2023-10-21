@@ -69,7 +69,7 @@ class _ChatPageState extends State<ChatPage> implements ChatPageView {
   }
 
   @override
-  bool get canShowButton => _currentScrollOffsetDifference > 15;
+  bool get canShowNewMessagesButton => _currentScrollOffsetDifference > 15;
 
   @override
   void scrollToBottom() => _scrollToBottom();

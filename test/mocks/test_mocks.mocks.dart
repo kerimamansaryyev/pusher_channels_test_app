@@ -372,3 +372,69 @@ class MockPusherChannelsConnectionRepository extends _i1.Mock
         returnValueForMissingStub: null,
       );
 }
+
+/// A class which mocks [PusherChannelsUserMessageEventEntity].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPusherChannelsUserMessageEventEntity extends _i1.Mock
+    implements _i14.PusherChannelsUserMessageEventEntity {
+  @override
+  String get messageContent => (super.noSuchMethod(
+        Invocation.getter(#messageContent),
+        returnValue: '',
+        returnValueForMissingStub: '',
+      ) as String);
+
+  @override
+  bool get isMyMessage => (super.noSuchMethod(
+        Invocation.getter(#isMyMessage),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+
+  @override
+  String get name => (super.noSuchMethod(
+        Invocation.getter(#name),
+        returnValue: '',
+        returnValueForMissingStub: '',
+      ) as String);
+}
+
+/// A class which mocks [PusherChannelsUserJoinedEventEntity].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPusherChannelsUserJoinedEventEntity extends _i1.Mock
+    implements _i14.PusherChannelsUserJoinedEventEntity {
+  @override
+  String get name => (super.noSuchMethod(
+        Invocation.getter(#name),
+        returnValue: '',
+        returnValueForMissingStub: '',
+      ) as String);
+}
+
+/// A class which mocks [PusherChannelsChatBeganEventEntity].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPusherChannelsChatBeganEventEntity extends _i1.Mock
+    implements _i14.PusherChannelsChatBeganEventEntity {
+  @override
+  String get name => (super.noSuchMethod(
+        Invocation.getter(#name),
+        returnValue: '',
+        returnValueForMissingStub: '',
+      ) as String);
+}
+
+/// A class which mocks [PusherChannelsUserLeftEventEntity].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPusherChannelsUserLeftEventEntity extends _i1.Mock
+    implements _i14.PusherChannelsUserLeftEventEntity {
+  @override
+  String get name => (super.noSuchMethod(
+        Invocation.getter(#name),
+        returnValue: '',
+        returnValueForMissingStub: '',
+      ) as String);
+}

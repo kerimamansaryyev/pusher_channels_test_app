@@ -8,17 +8,8 @@ import 'package:pusher_channels_test_app/features/settings/domain/repositories/s
 import 'package:pusher_channels_test_app/features/settings/domain/usecases/get_settings_records.dart';
 import 'package:pusher_channels_test_app/features/settings/domain/usecases/save_theme.dart';
 
+import '../../../mocks/dummy_failure.dart';
 import '../../../mocks/test_mocks.mocks.dart';
-
-final class _DummyFailure implements Failure {
-  const _DummyFailure();
-
-  @override
-  Exception? get exception => throw UnimplementedError();
-
-  @override
-  StackTrace? get stackTrace => throw UnimplementedError();
-}
 
 void main() {
   group(
@@ -48,10 +39,10 @@ void main() {
         () async {
           await getIt.allReady();
           provideDummy<Either<Failure<Exception>, String?>>(
-            const Left(_DummyFailure()),
+            const Left(DummyFailure()),
           );
           provideDummy<Either<Failure<Exception>, void>>(
-            const Left(_DummyFailure()),
+            const Left(DummyFailure()),
           );
 
           final userThemeChoiceName = const AppTheme.dark().name;

@@ -14,8 +14,7 @@ sealed class PusherChannelsEventEntity {
   });
 }
 
-final class PusherChannelsChatBeganEventEntity
-    extends PusherChannelsEventEntity {
+class PusherChannelsChatBeganEventEntity extends PusherChannelsEventEntity {
   final String? myUserId;
 
   PusherChannelsChatBeganEventEntity({
@@ -27,8 +26,7 @@ final class PusherChannelsChatBeganEventEntity
   });
 }
 
-final class PusherChannelsUserJoinedEventEntity
-    extends PusherChannelsEventEntity {
+class PusherChannelsUserJoinedEventEntity extends PusherChannelsEventEntity {
   final String? userId;
 
   PusherChannelsUserJoinedEventEntity({
@@ -40,8 +38,7 @@ final class PusherChannelsUserJoinedEventEntity
   });
 }
 
-final class PusherChannelsUserLeftEventEntity
-    extends PusherChannelsEventEntity {
+class PusherChannelsUserLeftEventEntity extends PusherChannelsEventEntity {
   final String? userId;
 
   PusherChannelsUserLeftEventEntity({
@@ -53,8 +50,7 @@ final class PusherChannelsUserLeftEventEntity
   });
 }
 
-final class PusherChannelsUserMessageEventEntity
-    extends PusherChannelsEventEntity {
+class PusherChannelsUserMessageEventEntity extends PusherChannelsEventEntity {
   final String? userId;
   final String messageContent;
   final bool isMyMessage;

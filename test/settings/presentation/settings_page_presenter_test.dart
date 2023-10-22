@@ -15,17 +15,8 @@ import 'package:pusher_channels_test_app/features/settings/presentation/pages/se
 import 'package:pusher_channels_test_app/features/settings/presentation/pages/settings_page/settings_page_view.dart';
 import 'package:pusher_channels_test_app/localization/localization_service.dart';
 
+import '../../mocks/dummy_failure.dart';
 import '../../mocks/test_mocks.mocks.dart';
-
-final class _DummyFailure implements Failure {
-  const _DummyFailure();
-
-  @override
-  Exception? get exception => throw UnimplementedError();
-
-  @override
-  StackTrace? get stackTrace => throw UnimplementedError();
-}
 
 final class _TestSettingsPageView implements SettingsPageView {
   final BlocBase<SettingsStoreState> readSettingsStoreCubit;
@@ -81,7 +72,7 @@ void main() {
           final getSettingsRecords = MockGetSettingsRecords();
           provideDummyBuilder<Either<Failure<Exception>, SettingsRecord>>(
             (parent, invocation) => const Left(
-              _DummyFailure(),
+              DummyFailure(),
             ),
           );
           const initialLocale = LocalizationService.tkLocale;
@@ -119,12 +110,12 @@ void main() {
 
           provideDummyBuilder<Either<Failure<Exception>, SettingsRecord>>(
             (parent, invocation) => const Left(
-              _DummyFailure(),
+              DummyFailure(),
             ),
           );
           provideDummyBuilder<Either<Failure<Exception>, void>>(
             (parent, invocation) => const Left(
-              _DummyFailure(),
+              DummyFailure(),
             ),
           );
 

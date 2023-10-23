@@ -23,7 +23,7 @@ import 'package:pusher_channels_test_app/features/pusher_channels_connection/pre
 
 import '../../../mocks/dummy_failure.dart';
 import '../../../mocks/test_mocks.mocks.dart';
-import 'test_chat_page.dart';
+import 'test_chat_page_driver.dart';
 
 final _getIt = GetIt.instance..allowReassignment = true;
 

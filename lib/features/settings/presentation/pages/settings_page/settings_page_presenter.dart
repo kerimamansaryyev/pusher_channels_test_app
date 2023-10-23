@@ -27,7 +27,11 @@ final class SettingsPagePresenter
       model.settingsStoreCubit.chooseLanguage(newLocale);
 
   @override
-  Widget buildMultiBlocListener(BuildContext context, Widget child) {
+  Widget buildMultiBlocListener(
+    BuildContext context,
+    Widget child, {
+    Key? key,
+  }) {
     return child;
   }
 }

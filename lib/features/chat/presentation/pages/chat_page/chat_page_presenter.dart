@@ -20,9 +20,11 @@ import 'package:pusher_channels_test_app/localization/extensions.dart';
 @injectable
 final class ChatPagePresenter
     extends AppPresenter<ChatPageView, ChatPageModel> {
-  static const _subsWaitingTimeoutDuration = Duration(
+  static const subsWaitingTimeoutDuration = Duration(
     seconds: 5,
   );
+
+  Timer? _channelSubscriptionWaitingTimer;
 
   @override
   final ChatPageModel model;
@@ -64,6 +66,7 @@ final class ChatPagePresenter
   @override
   void dispose() {
     super.dispose();
+    _channelSubscriptionWaitingTimer?.cancel();
     model.pusherChannelsConnectionCubit.close();
     model.chatListCubit.close();
     model.chatMessageTriggerCubit.close();
@@ -71,8 +74,13 @@ final class ChatPagePresenter
   }
 
   @override
-  MultiBlocListener buildMultiBlocListener(BuildContext context, Widget child) {
+  MultiBlocListener buildMultiBlocListener(
+    BuildContext context,
+    Widget child, {
+    Key? key,
+  }) {
     return MultiBlocListener(
+      key: key,
       listeners: [
         BlocListener<ChatListCubit, ChatListState>(
           bloc: model.chatListCubit,
@@ -107,21 +115,28 @@ final class ChatPagePresenter
     );
   }
 
-  void _checkIfWaitingLongForSubscription() async {
-    try {
-      await Future.delayed(_subsWaitingTimeoutDuration);
-      model.chatListCubit.state.when(
-        succeeded: (_) {
-          return;
-        },
-        waitingForSubscription: () => throw TimeoutException(null),
-      );
-    } on TimeoutException catch (exception, stackTrace) {
-      model.pusherChannelsConnectionCubit.breakConnectionWithError(
-        exception,
-        stackTrace,
-      );
-    }
+  void _checkIfWaitingLongForSubscription() {
+    _channelSubscriptionWaitingTimer?.cancel();
+    _channelSubscriptionWaitingTimer = Timer(
+      subsWaitingTimeoutDuration,
+      () {
+        model.chatListCubit.state.when(
+          succeeded: (_) {
+            return;
+          },
+          waitingForSubscription: () {
+            try {
+              throw TimeoutException(null);
+            } on TimeoutException catch (exception, stackTrace) {
+              model.pusherChannelsConnectionCubit.breakConnectionWithError(
+                exception,
+                stackTrace,
+              );
+            }
+          },
+        );
+      },
+    );
   }
 
   void _onConnectionChanged(PusherChannelsConnectionState connectionState) {

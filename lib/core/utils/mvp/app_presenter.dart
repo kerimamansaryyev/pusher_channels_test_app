@@ -21,5 +21,12 @@ abstract class AppPresenter<V extends AppView, M extends AppModel> {
     _view = null;
   }
 
-  Widget buildMultiBlocListener(BuildContext context, Widget child);
+  @visibleForTesting
+  V? getViewTest() => view;
+
+  Widget buildMultiBlocListener(
+    BuildContext context,
+    Widget child, {
+    Key? key,
+  });
 }

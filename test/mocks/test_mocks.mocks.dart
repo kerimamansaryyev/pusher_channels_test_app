@@ -12,12 +12,26 @@ import 'package:pusher_channels_test_app/core/domain/failure.dart' as _i5;
 import 'package:pusher_channels_test_app/core/utils/either/either.dart' as _i4;
 import 'package:pusher_channels_test_app/core/utils/theme/app_theme.dart'
     as _i10;
+import 'package:pusher_channels_test_app/features/chat/domain/usecases/reset_presence_channel_state.dart'
+    as _i18;
+import 'package:pusher_channels_test_app/features/chat/domain/usecases/subscribe_and_listen_to_presence_channel_events.dart'
+    as _i21;
+import 'package:pusher_channels_test_app/features/chat/domain/usecases/trigger_client_event_on_presence_channel.dart'
+    as _i20;
+import 'package:pusher_channels_test_app/features/chat/presentation/pages/chat_page/chat_page_view.dart'
+    as _i15;
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_connection_result.dart'
     as _i13;
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart'
     as _i14;
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/repositories/pusher_channels_connection_repository.dart'
     as _i12;
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/use-cases/connect_pusher_channels_client.dart'
+    as _i19;
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/use-cases/listen_for_pusher_channels_client_connection.dart'
+    as _i17;
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/use-cases/reset_pusher_channels_client.dart'
+    as _i16;
 import 'package:pusher_channels_test_app/features/settings/domain/repositories/settings_repository.dart'
     as _i2;
 import 'package:pusher_channels_test_app/features/settings/domain/usecases/get_settings_records.dart'
@@ -437,4 +451,160 @@ class MockPusherChannelsUserLeftEventEntity extends _i1.Mock
         returnValue: '',
         returnValueForMissingStub: '',
       ) as String);
+}
+
+/// A class which mocks [ChatPageView].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockChatPageView extends _i1.Mock implements _i15.ChatPageView {
+  @override
+  bool get canShowNewMessagesButton => (super.noSuchMethod(
+        Invocation.getter(#canShowNewMessagesButton),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+
+  @override
+  void scrollToBottom() => super.noSuchMethod(
+        Invocation.method(
+          #scrollToBottom,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void showMessageNotTriggeredError({
+    required String? title,
+    required String? description,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #showMessageNotTriggeredError,
+          [],
+          {
+            #title: title,
+            #description: description,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [ResetPusherChannelsClient].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockResetPusherChannelsClient extends _i1.Mock
+    implements _i16.ResetPusherChannelsClient {
+  @override
+  void call() => super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [ListenForPusherChannelsClientConnection].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockListenForPusherChannelsClientConnection extends _i1.Mock
+    implements _i17.ListenForPusherChannelsClientConnection {
+  @override
+  _i3.Stream<_i13.PusherChannelsConnectionResult> call() => (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+        ),
+        returnValue: _i3.Stream<_i13.PusherChannelsConnectionResult>.empty(),
+        returnValueForMissingStub:
+            _i3.Stream<_i13.PusherChannelsConnectionResult>.empty(),
+      ) as _i3.Stream<_i13.PusherChannelsConnectionResult>);
+}
+
+/// A class which mocks [ResetPresenceChannelState].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockResetPresenceChannelState extends _i1.Mock
+    implements _i18.ResetPresenceChannelState {
+  @override
+  void call() => super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [ConnectPusherChannelsClient].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockConnectPusherChannelsClient extends _i1.Mock
+    implements _i19.ConnectPusherChannelsClient {
+  @override
+  void call() => super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [TriggerClientEventOnPresenceChannel].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTriggerClientEventOnPresenceChannel extends _i1.Mock
+    implements _i20.TriggerClientEventOnPresenceChannel {
+  @override
+  _i4.Either<_i5.Failure<Exception>, _i14.PusherChannelsUserMessageEventEntity>
+      call({required String? message}) => (super.noSuchMethod(
+            Invocation.method(
+              #call,
+              [],
+              {#message: message},
+            ),
+            returnValue: _i6.dummyValue<
+                _i4.Either<_i5.Failure<Exception>,
+                    _i14.PusherChannelsUserMessageEventEntity>>(
+              this,
+              Invocation.method(
+                #call,
+                [],
+                {#message: message},
+              ),
+            ),
+            returnValueForMissingStub: _i6.dummyValue<
+                _i4.Either<_i5.Failure<Exception>,
+                    _i14.PusherChannelsUserMessageEventEntity>>(
+              this,
+              Invocation.method(
+                #call,
+                [],
+                {#message: message},
+              ),
+            ),
+          ) as _i4.Either<_i5.Failure<Exception>,
+              _i14.PusherChannelsUserMessageEventEntity>);
+}
+
+/// A class which mocks [SubscribeAndListenToPresenceChannelEvents].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSubscribeAndListenToPresenceChannelEvents extends _i1.Mock
+    implements _i21.SubscribeAndListenToPresenceChannelEvents {
+  @override
+  _i3.Stream<_i14.PusherChannelsEventEntity> call({String? eventNameToBind}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+          {#eventNameToBind: eventNameToBind},
+        ),
+        returnValue: _i3.Stream<_i14.PusherChannelsEventEntity>.empty(),
+        returnValueForMissingStub:
+            _i3.Stream<_i14.PusherChannelsEventEntity>.empty(),
+      ) as _i3.Stream<_i14.PusherChannelsEventEntity>);
 }

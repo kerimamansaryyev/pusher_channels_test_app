@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pusher_channels_test_app/di/injection_container.dart';
@@ -23,6 +24,11 @@ final class ChatListCubit extends Cubit<ChatListState> {
 
   factory ChatListCubit.fromEnvironment() => serviceLocator<ChatListCubit>();
 
+  @visibleForTesting
+  List<PusherChannelsEventEntity> getMessagesForTest() => [
+        ..._messages,
+      ];
+
   void resetToWaitingForSubscription() {
     _resetPresenceChannelState();
     emit(const _WaitingForSubscription());
@@ -34,14 +40,19 @@ final class ChatListCubit extends Cubit<ChatListState> {
     return super.close();
   }
 
-  void pushOwnMessage(PusherChannelsUserMessageEventEntity message) => emit(
-        _Succeeded(
-          messages: _messages
-            ..add(
-              message,
-            ),
-        ),
-      );
+  void pushOwnMessage(PusherChannelsUserMessageEventEntity message) {
+    if (isClosed) {
+      return;
+    }
+    emit(
+      _Succeeded(
+        messages: _messages
+          ..add(
+            message,
+          ),
+      ),
+    );
+  }
 
   void startListening() {
     _messagesStreamSubs?.cancel();

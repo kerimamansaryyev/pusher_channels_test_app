@@ -37,11 +37,11 @@ import '../features/pusher_channels_connection/data/repositories/pusher_channels
     as _i9;
 import '../features/pusher_channels_connection/domain/repositories/pusher_channels_connection_repository.dart'
     as _i8;
-import '../features/pusher_channels_connection/domain/use-cases/connect_pusher_channels_client.dart'
+import '../features/pusher_channels_connection/domain/usecases/connect_pusher_channels_client.dart'
     as _i18;
-import '../features/pusher_channels_connection/domain/use-cases/listen_for_pusher_channels_client_connection.dart'
+import '../features/pusher_channels_connection/domain/usecases/listen_for_pusher_channels_client_connection.dart'
     as _i19;
-import '../features/pusher_channels_connection/domain/use-cases/reset_pusher_channels_client.dart'
+import '../features/pusher_channels_connection/domain/usecases/reset_pusher_channels_client.dart'
     as _i11;
 import '../features/pusher_channels_connection/presentation/blocs/pusher_channels_connection_cubit.dart'
     as _i20;

@@ -26,11 +26,11 @@ import 'package:pusher_channels_test_app/features/pusher_channels_connection/dom
     as _i14;
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/repositories/pusher_channels_connection_repository.dart'
     as _i12;
-import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/use-cases/connect_pusher_channels_client.dart'
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/usecases/connect_pusher_channels_client.dart'
     as _i19;
-import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/use-cases/listen_for_pusher_channels_client_connection.dart'
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/usecases/listen_for_pusher_channels_client_connection.dart'
     as _i17;
-import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/use-cases/reset_pusher_channels_client.dart'
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/usecases/reset_pusher_channels_client.dart'
     as _i16;
 import 'package:pusher_channels_test_app/features/settings/domain/repositories/settings_repository.dart'
     as _i2;

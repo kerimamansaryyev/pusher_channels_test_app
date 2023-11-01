@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pusher_channels_test_app/features/chat/data/chat_constants.dart';
+import 'package:pusher_channels_test_app/features/chat/data/constants/chat_constants.dart';
 import 'package:pusher_channels_test_app/features/chat/domain/usecases/reset_presence_channel_state.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/repositories/pusher_channels_connection_repository.dart';
 import '../../../mocks/test_mocks.mocks.dart';

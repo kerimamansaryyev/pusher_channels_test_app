@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_connection_result.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/repositories/pusher_channels_connection_repository.dart';
-import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/use-cases/listen_for_pusher_channels_client_connection.dart';
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/usecases/listen_for_pusher_channels_client_connection.dart';
 
 import '../../../mocks/test_mocks.mocks.dart';
 

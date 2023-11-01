@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pusher_channels_test_app/di/injection_container.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_connection_result.dart';
-import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/use-cases/connect_pusher_channels_client.dart';
-import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/use-cases/listen_for_pusher_channels_client_connection.dart';
-import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/use-cases/reset_pusher_channels_client.dart';
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/usecases/connect_pusher_channels_client.dart';
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/usecases/listen_for_pusher_channels_client_connection.dart';
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/usecases/reset_pusher_channels_client.dart';
 
 @injectable
 final class PusherChannelsConnectionCubit

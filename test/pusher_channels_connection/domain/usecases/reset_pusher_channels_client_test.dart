@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/repositories/pusher_channels_connection_repository.dart';
-import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/use-cases/reset_pusher_channels_client.dart';
+import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/usecases/reset_pusher_channels_client.dart';
 
 import '../../../mocks/test_mocks.mocks.dart';
 

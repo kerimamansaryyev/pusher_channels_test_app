@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pusher_channels_test_app/features/chat/data/chat_constants.dart';
+import 'package:pusher_channels_test_app/features/chat/data/constants/chat_constants.dart';
 import 'package:pusher_channels_test_app/features/chat/domain/usecases/subscribe_and_listen_to_presence_channel_events.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/entities/pusher_channels_event_entity.dart';
 import 'package:pusher_channels_test_app/features/pusher_channels_connection/domain/repositories/pusher_channels_connection_repository.dart';

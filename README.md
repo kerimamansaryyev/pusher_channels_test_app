@@ -2,6 +2,10 @@
 
 A real-time chat application to showcase [dart_pusher_channels](https://pub.dev/packages/dart_pusher_channels).
 
+## How to test?
+Visit [test.pusher.com](https://test.pusher.com), ensure that the cluster set to `mt1`
+and try to trigger some messages. In the app's chat room you should be able to the messages triggered from the website.
+
 # Structure and architecture
 - FDD (Feature-Driven-Design) is used as a primary architectural solution.
 - MVP (Model-View-Presenter) pattern is used for business logic interactions on the presentation layer. [Bloc](https://pub.dev/packages/flutter_bloc)s are associated with `AppModel` interface implementations.

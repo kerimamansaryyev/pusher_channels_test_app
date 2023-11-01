@@ -48,6 +48,14 @@ A real-time chat application to showcase [dart_pusher_channels](https://pub.dev/
   - Uses an implementer of the view contract to react on some events delivered from the model's blocs.
 - `[feature_name/presentation/pages/[page_name].dart]` - the stateful widget, the state class of which implements the corresponding view contract and gets bound to the corresponding presenter.
 
+## Screenshots
+<p float="left">
+  <img src="./screenshots/1.png" height="200"   alt="screenshot1"/>
+  <img src="./screenshots/2.png" height="200"  alt="screenshot2"/>
+  <img src="./screenshots/3.png" height="200" alt="screenshot3"/>
+  <img src="./screenshots/4.png" height="200" alt="screenshot3"/>
+</p>
+
 ## Diagrams
 
 ### Static models (Domain class diagram)

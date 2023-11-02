@@ -69,6 +69,58 @@ and try to trigger some messages. In the app's chat room you should be able to s
 ![design_scheme](./diagrams/abstract_design_scheme.png)
 
 ### Model-View-Presenter object interaction diagram
+#### Contracts of `AppPresenter`:
+- managing interactions of owned `AppModel`'s blocs internally. (Building and providing handlers to a MultiBlocListener)
+- providing public read-only access to owned `AppModel`'s blocs. (Usually, upcasting them to BlocBase).
+- providing public methods to trigger corresponding operations of owned `AppModel`'s blocs.
+
+#### Contracts of `AppModel`:
+- providing instances of Bloc for a use by a corresponding presenter.
+
+#### Contracts of `AppView`
+- providing public methods to interact with UI: showing dialogs, scrolling, navigating to other page and e.t.c.
+
+Typically, a widget state class fulfills the contracts of page-specific interface extending `AppView`. 
+Also, it creates an instance of a presenter respectively to the implemented view interface and binds itself to a presenter providing its contracts. So, a widget state **owns** an instance of a presenter and provides contracts of a view for the presenter at the same time.
+Example:
+```dart
+class _ChatPageState extends State<ChatPage> implements ChatPageView {
+  // ...
+  // Binds itself as an implementer of ChatPageView's contracts
+  // So _presenter does not know that it's _ChatPageState, it recognizes "this" as an instance of ChatPageView  
+  late final ChatPagePresenter _presenter = ChatPagePresenter.fromEnvironment()
+    ..bindView(this);
+  //...
+  // Provides an implementation to contracts of ChatPageView
+  @override
+  void scrollToBottom() => _scrollToBottom();
+  // ...
+  // "Activates" _presenter by wrapping its widget subtree like:
+  @Override
+  Widget build(){
+    return _presenter.buildMultiBlocListener(
+            context,
+            BlocBuilder<BlocBase<PusherChannelsConnectionState>,
+                        PusherChannelsConnectionState>(
+              // listens to changes on upcasted read-only BlocBase instances 
+              bloc: _presenter.readPusherChannelsConnectionCubit,
+              builder: (context, chatListState) => Text('Hello'),
+            )
+    );
+  }
+  // ...
+  // Calls _presenter's operations (For example, to trigger a message)
+  void _triggerMessage(String message) => _presenter.triggerMessage(message);
+  // ...
+  // disposing _presenter when there is no need
+  @override
+  void dispose() {
+    _presenter.dispose();
+    super.dispose();
+  }
+  // ...
+}
+```
 
 ![mvp_general_diagram](./diagrams/mvp_general_diagram.png)
 
